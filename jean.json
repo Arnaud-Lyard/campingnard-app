@@ -1,0 +1,7 @@
+{
+  "scripts": {
+    "setup": "make build",
+    "teardown": "make down",
+    "run": "make up"
+  }
+}
