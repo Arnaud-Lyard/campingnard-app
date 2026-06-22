@@ -21,19 +21,19 @@ Authentification déjà en place : inscription, vérification d'e-mail, mot de p
 Tout s'exécute dans le conteneur Docker `php`, via le `makefile`. Lance `make help`
 pour la liste complète. Principales cibles :
 
-| Commande | Effet |
-| --- | --- |
-| `make start` | Build + démarre les conteneurs |
-| `make up` / `make down` | Démarre / arrête les conteneurs |
-| `make build` | Reconstruit les images |
-| `make logs` | Logs en direct |
-| `make sh` | Shell dans le conteneur `php` |
-| `make sf c="<cmd>"` | `bin/console` (ex. `make sf c=about`) |
-| `make cc` | Vide le cache (`cache:clear`) |
+| Commande                  | Effet                                                   |
+| ------------------------- | ------------------------------------------------------- |
+| `make start`              | Build + démarre les conteneurs                          |
+| `make up` / `make down`   | Démarre / arrête les conteneurs                         |
+| `make build`              | Reconstruit les images                                  |
+| `make logs`               | Logs en direct                                          |
+| `make sh`                 | Shell dans le conteneur `php`                           |
+| `make sf c="<cmd>"`       | `bin/console` (ex. `make sf c=about`)                   |
+| `make cc`                 | Vide le cache (`cache:clear`)                           |
 | `make composer c="<cmd>"` | Composer (ex. `make composer c='req symfony/orm-pack'`) |
-| `make migration` | Génère une migration (`make:migration`) |
-| `make migrate` | Applique les migrations |
-| `make test` | Lance PHPUnit (env `test`) ; options via `c=` |
+| `make migration`          | Génère une migration (`make:migration`)                 |
+| `make migrate`            | Applique les migrations                                 |
+| `make test`               | Lance PHPUnit (env `test`) ; options via `c=`           |
 
 `jean.json` mappe par ailleurs : `setup`→`make build`, `run`→`make up`, `teardown`→`make down`.
 

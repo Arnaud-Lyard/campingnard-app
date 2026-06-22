@@ -15,7 +15,7 @@ indent_size = 4
 indent_style = tab
 
 [{compose.*yaml,.devcontainer/compose.*yaml,.github/**/*.yaml}]
-indent_size = 2
+indent_size = 4
 
 [**.md]
 indent_size = unset

@@ -11,7 +11,7 @@ SYMFONY  = $(PHP) bin/console
 
 # Misc
 .DEFAULT_GOAL = help
-.PHONY        : help build up start down logs sh composer vendor sf cc test
+.PHONY        : help build up start down logs sh composer vendor sf cc test lint lint-fix
 
 ## —— 🎵 🐳 The Symfony Docker Makefile 🐳 🎵 ——————————————————————————————————
 help: ## Outputs this help screen
@@ -51,6 +51,45 @@ composer: ## Run composer, pass the parameter "c=" to run a given command, examp
 vendor: ## Install vendors according to the current composer.lock file
 vendor: c=install --prefer-dist --no-dev --no-progress --no-scripts --no-interaction
 vendor: composer
+
+## —— Lint 🧹 ——————————————————————————————————————————————————————————————————
+lint: ## Run super-linter locally (same checks as CI) via Docker
+	@docker run --rm \
+		-e RUN_LOCAL=true \
+		-e DEFAULT_BRANCH=main \
+		-e GITHUB_ACTIONS_CONFIG_FILE=actionlint.yaml \
+		-e VALIDATE_CHECKOV=false \
+		-e VALIDATE_TRIVY=false \
+		-e VALIDATE_BIOME_FORMAT=false \
+		-e VALIDATE_BIOME_LINT=false \
+		-e VALIDATE_PHP_BUILTIN=false \
+		-e VALIDATE_PHP_PHPCS=false \
+		-e VALIDATE_PHP_PHPSTAN=false \
+		-e VALIDATE_PHP_PSALM=false \
+		-v $(PWD):/tmp/lint \
+		ghcr.io/super-linter/super-linter:slim-v8
+
+lint-fix: ## Auto-fix lint issues where possible (YAML, Markdown, JSON, shell, .env)
+	@docker run --rm \
+		-e RUN_LOCAL=true \
+		-e DEFAULT_BRANCH=main \
+		-e GITHUB_ACTIONS_CONFIG_FILE=actionlint.yaml \
+		-e VALIDATE_CHECKOV=false \
+		-e VALIDATE_TRIVY=false \
+		-e VALIDATE_BIOME_FORMAT=false \
+		-e VALIDATE_BIOME_LINT=false \
+		-e VALIDATE_PHP_BUILTIN=false \
+		-e VALIDATE_PHP_PHPCS=false \
+		-e VALIDATE_PHP_PHPSTAN=false \
+		-e VALIDATE_PHP_PSALM=false \
+		-e FIX_YAML_PRETTIER=true \
+		-e FIX_MARKDOWN=true \
+		-e FIX_MARKDOWN_PRETTIER=true \
+		-e FIX_JSON_PRETTIER=true \
+		-e FIX_SHELL_SHFMT=true \
+		-e FIX_ENV=true \
+		-v $(PWD):/tmp/lint \
+		ghcr.io/super-linter/super-linter:slim-v8
 
 ## —— Symfony 🎵 ———————————————————————————————————————————————————————————————
 sf: ## List all Symfony commands or pass the parameter "c=" to run a given command, example: make sf c=about

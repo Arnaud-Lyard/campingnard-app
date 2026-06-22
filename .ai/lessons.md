@@ -1,6 +1,7 @@
 # Lessons
 
 ## Doctrine migrations
+
 - **Ne jamais réécrire une migration déjà exécutée pour la corriger.** Doctrine ne rejoue pas une version
   déjà présente dans `doctrine_migration_versions` : modifier son `up()` n'a aucun effet sur la base.
   → Toujours créer une **nouvelle** migration (timestamp ultérieur) qui applique le diff manquant
