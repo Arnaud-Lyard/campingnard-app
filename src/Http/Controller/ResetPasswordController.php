@@ -50,6 +50,7 @@ class ResetPasswordController extends AbstractController
                 $email,
                 $mailer,
                 $translator,
+                $request->getLocale(),
             );
         }
 
@@ -158,6 +159,7 @@ class ResetPasswordController extends AbstractController
         string $emailFormData,
         MailerInterface $mailer,
         TranslatorInterface $translator,
+        string $locale,
     ): RedirectResponse {
         $user = $this->entityManager->getRepository(User::class)->findOneBy([
             "email" => $emailFormData,
@@ -187,7 +189,8 @@ class ResetPasswordController extends AbstractController
         $email = new TemplatedEmail()
             ->from(new Address("mailer@camping.fr", "Camping"))
             ->to((string) $user->getEmail())
-            ->subject("Réinitialisation de votre mot de passe")
+            ->subject($translator->trans("email.reset.subject"))
+            ->locale($locale)
             ->htmlTemplate("reset_password/email.html.twig")
             ->context([
                 "resetToken" => $resetToken,

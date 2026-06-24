@@ -1,0 +1,72 @@
+page:
+    welcome_title: "Bienvenue !"
+    user_space_title: "Bienvenue dans votre espace !"
+
+nav:
+    dashboard: "Tableau de bord"
+    team: "Équipe"
+    projects: "Projets"
+    calendar: "Calendrier"
+    documents: "Documents"
+    reports: "Rapports"
+    your_teams: "Vos équipes"
+    your_profile: "Votre profil"
+    open_sidebar: "Ouvrir la barre latérale"
+    close_sidebar: "Fermer la barre latérale"
+
+auth:
+    email_label: "Adresse e-mail"
+    password_label: "Mot de passe"
+    back_to_login: "Retour à la connexion"
+    login:
+        page_title: "Connexion"
+        heading: "Connectez-vous à votre compte"
+        no_account: "Pas encore de compte ?"
+        register_link: "Inscrivez-vous"
+        remember_me: "Se souvenir de moi"
+        forgot_password: "Mot de passe oublié ?"
+        submit: "Se connecter"
+    register:
+        page_title: "Inscription"
+        heading: "Créez votre compte"
+        already_registered: "Déjà inscrit ?"
+        login_link: "Connectez-vous"
+        agree_terms: "J'accepte les conditions d'utilisation"
+        submit: "S'inscrire"
+    reset_request:
+        page_title: "Mot de passe oublié"
+        heading: "Mot de passe oublié ?"
+        intro: "Saisissez votre adresse e-mail, nous vous enverrons un lien pour réinitialiser votre mot de passe."
+        submit: "Réinitialiser mon mot de passe"
+    check_email:
+        page_title: "Vérifiez vos e-mails"
+        heading: "Vérifiez vos e-mails"
+        sent: "Si un compte correspond à l'adresse saisie, un e-mail vient de vous être envoyé avec un lien permettant de réinitialiser votre mot de passe. Ce lien expirera dans %duration%."
+        spam_before: "Si vous ne recevez pas d'e-mail, vérifiez votre dossier de courriers indésirables ou"
+        retry: "réessayez"
+    reset:
+        page_title: "Nouveau mot de passe"
+        heading: "Choisissez un nouveau mot de passe"
+        new_password_label: "Nouveau mot de passe"
+        repeat_password_label: "Répétez le mot de passe"
+        submit: "Enregistrer"
+
+flash:
+    email_verified: "Votre adresse e-mail a été vérifiée. Vous pouvez maintenant vous connecter."
+
+email:
+    confirm:
+        subject: "Veuillez confirmer votre adresse e-mail"
+        heading: "Bonjour ! Veuillez confirmer votre adresse e-mail"
+        intro: "Confirmez votre adresse e-mail en cliquant sur le lien suivant :"
+        link: "Confirmer mon adresse e-mail"
+        expiration: "Ce lien expirera dans %duration%."
+        signature: "À bientôt !"
+    reset:
+        subject: "Réinitialisation de votre mot de passe"
+        heading: "Bonjour !"
+        intro: "Pour réinitialiser votre mot de passe, cliquez sur le lien suivant :"
+        link: "Réinitialiser mon mot de passe"
+        expiration: "Ce lien expirera dans %duration%."
+        ignore: "Si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer cet e-mail."
+        signature: "À bientôt !"

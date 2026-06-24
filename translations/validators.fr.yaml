@@ -1,1 +1,10 @@
 There is already an account with this email: Il y a déjà un compte avec cette adresse e-mail
+
+registration:
+    agree_terms: "Vous devez accepter nos conditions d'utilisation."
+password:
+    required: "Veuillez saisir un mot de passe."
+    min_length: "Votre mot de passe doit contenir au moins {{ limit }} caractères."
+    mismatch: "Les deux mots de passe doivent être identiques."
+email:
+    required: "Veuillez saisir votre adresse e-mail."

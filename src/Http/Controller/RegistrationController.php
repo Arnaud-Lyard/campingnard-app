@@ -14,17 +14,19 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 class RegistrationController extends AbstractController
 {
     public function __construct(private EmailVerifier $emailVerifier) {}
 
-    #[Route("/inscription", name: "app_register")]
+    #[Route("/register", name: "app_register")]
     public function register(
         Request $request,
         UserPasswordHasherInterface $userPasswordHasher,
         EntityManagerInterface $entityManager,
+        TranslatorInterface $translator,
     ): Response {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -38,6 +40,7 @@ class RegistrationController extends AbstractController
             $user->setPassword(
                 $userPasswordHasher->hashPassword($user, $plainPassword),
             );
+            $user->setRoles(["ROLE_USER"]);
 
             $entityManager->persist($user);
             $entityManager->flush();
@@ -49,7 +52,8 @@ class RegistrationController extends AbstractController
                 new TemplatedEmail()
                     ->from(new Address("mailer@camping.fr", "Camping"))
                     ->to((string) $user->getEmail())
-                    ->subject("Veuillez confirmer votre adresse e-mail")
+                    ->subject($translator->trans("email.confirm.subject"))
+                    ->locale($request->getLocale())
                     ->htmlTemplate("registration/confirmation_email.html.twig"),
             );
 
@@ -67,6 +71,7 @@ class RegistrationController extends AbstractController
     public function verifyUserEmail(
         Request $request,
         UserRepository $userRepository,
+        TranslatorInterface $translator,
     ): Response {
         // validation anonyme : l'utilisateur n'a pas besoin d'être connecté.
         $id = $request->query->get("id");
@@ -83,15 +88,19 @@ class RegistrationController extends AbstractController
         try {
             $this->emailVerifier->handleEmailConfirmation($request, $user);
         } catch (VerifyEmailExceptionInterface $exception) {
-            $this->addFlash("verify_email_error", $exception->getReason());
+            $this->addFlash(
+                "verify_email_error",
+                $translator->trans(
+                    $exception->getReason(),
+                    [],
+                    "VerifyEmailBundle",
+                ),
+            );
 
             return $this->redirectToRoute("app_register");
         }
 
-        $this->addFlash(
-            "success",
-            "Votre adresse e-mail a été vérifiée. Vous pouvez maintenant vous connecter.",
-        );
+        $this->addFlash("success", $translator->trans("flash.email_verified"));
 
         // l'email étant vérifié, on envoie l'utilisateur se connecter
         return $this->redirectToRoute("app_login");

@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Vérifiez vos e-mails{% endblock %}
+{% block title %}{{ 'auth.check_email.page_title'|trans }}{% endblock %}
 
 {% block body %}
 <div class="flex min-h-full">
@@ -8,23 +8,21 @@
         <div class="mx-auto w-full max-w-sm lg:w-96">
             <div>
                 <h1 class="text-2xl font-bold tracking-tight text-indigo-600">⛺ Camping</h1>
-                <h2 class="mt-8 text-2xl font-bold tracking-tight text-gray-900">Vérifiez vos e-mails</h2>
+                <h2 class="mt-8 text-2xl font-bold tracking-tight text-gray-900">{{ 'auth.check_email.heading'|trans }}</h2>
             </div>
 
             <div class="mt-10 space-y-4 text-sm text-gray-500">
                 <p>
-                    Si un compte correspond à l'adresse saisie, un e-mail vient de vous être envoyé
-                    avec un lien permettant de réinitialiser votre mot de passe. Ce lien expirera dans
-                    {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
+                    {{ 'auth.check_email.sent'|trans({'%duration%': resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle')}) }}
                 </p>
                 <p>
-                    Si vous ne recevez pas d'e-mail, vérifiez votre dossier de courriers indésirables ou
-                    <a href="{{ path('app_forgot_password_request') }}" class="font-semibold text-indigo-600 hover:text-indigo-500">réessayez</a>.
+                    {{ 'auth.check_email.spam_before'|trans }}
+                    <a href="{{ path('app_forgot_password_request') }}" class="font-semibold text-indigo-600 hover:text-indigo-500">{{ 'auth.check_email.retry'|trans }}</a>.
                 </p>
             </div>
 
             <p class="mt-6 text-sm text-gray-500">
-                <a href="{{ path('app_login') }}" class="font-semibold text-indigo-600 hover:text-indigo-500">Retour à la connexion</a>
+                <a href="{{ path('app_login') }}" class="font-semibold text-indigo-600 hover:text-indigo-500">{{ 'auth.back_to_login'|trans }}</a>
             </p>
         </div>
     </div>

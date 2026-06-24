@@ -1,0 +1,72 @@
+page:
+    welcome_title: "Welcome!"
+    user_space_title: "Welcome to your area!"
+
+nav:
+    dashboard: "Dashboard"
+    team: "Team"
+    projects: "Projects"
+    calendar: "Calendar"
+    documents: "Documents"
+    reports: "Reports"
+    your_teams: "Your teams"
+    your_profile: "Your profile"
+    open_sidebar: "Open sidebar"
+    close_sidebar: "Close sidebar"
+
+auth:
+    email_label: "Email address"
+    password_label: "Password"
+    back_to_login: "Back to login"
+    login:
+        page_title: "Login"
+        heading: "Sign in to your account"
+        no_account: "Don't have an account yet?"
+        register_link: "Sign up"
+        remember_me: "Remember me"
+        forgot_password: "Forgot your password?"
+        submit: "Sign in"
+    register:
+        page_title: "Sign up"
+        heading: "Create your account"
+        already_registered: "Already registered?"
+        login_link: "Sign in"
+        agree_terms: "I agree to the terms of service"
+        submit: "Sign up"
+    reset_request:
+        page_title: "Forgot password"
+        heading: "Forgot your password?"
+        intro: "Enter your email address and we'll send you a link to reset your password."
+        submit: "Reset my password"
+    check_email:
+        page_title: "Check your email"
+        heading: "Check your email"
+        sent: "If an account matches the address you entered, an email has just been sent to you with a link to reset your password. This link will expire in %duration%."
+        spam_before: "If you don't receive an email, check your spam folder or"
+        retry: "try again"
+    reset:
+        page_title: "New password"
+        heading: "Choose a new password"
+        new_password_label: "New password"
+        repeat_password_label: "Repeat password"
+        submit: "Save"
+
+flash:
+    email_verified: "Your email address has been verified. You can now log in."
+
+email:
+    confirm:
+        subject: "Please confirm your email address"
+        heading: "Hello! Please confirm your email address"
+        intro: "Please confirm your email address by clicking the following link:"
+        link: "Confirm my email address"
+        expiration: "This link will expire in %duration%."
+        signature: "See you soon!"
+    reset:
+        subject: "Reset your password"
+        heading: "Hello!"
+        intro: "To reset your password, click the following link:"
+        link: "Reset my password"
+        expiration: "This link will expire in %duration%."
+        ignore: "If you didn't request this, you can safely ignore this email."
+        signature: "See you soon!"

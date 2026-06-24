@@ -1,15 +1,15 @@
-<h1>Bonjour !</h1>
+<h1>{{ 'email.reset.heading'|trans }}</h1>
 
 <p>
-    Pour réinitialiser votre mot de passe, cliquez sur le lien suivant : <br><br>
-    <a href="{{ url('app_reset_password', {token: resetToken.token}) }}">Réinitialiser mon mot de passe</a>.
-    Ce lien expirera dans {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
+    {{ 'email.reset.intro'|trans }} <br><br>
+    <a href="{{ url('app_reset_password', {token: resetToken.token}) }}">{{ 'email.reset.link'|trans }}</a>.
+    {{ 'email.reset.expiration'|trans({'%duration%': resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle')}) }}
 </p>
 
 <p>
-    Si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer cet e-mail.
+    {{ 'email.reset.ignore'|trans }}
 </p>
 
 <p>
-    À bientôt !
+    {{ 'email.reset.signature'|trans }}
 </p>

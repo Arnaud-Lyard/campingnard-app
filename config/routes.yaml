@@ -3,3 +3,8 @@ controllers:
         path: ../src/Http/Controller/
         namespace: App\Http\Controller
     type: attribute
+    prefix: /{_locale}
+    requirements:
+        _locale: en|fr
+    defaults:
+        _locale: fr

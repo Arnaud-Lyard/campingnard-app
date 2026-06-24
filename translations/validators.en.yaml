@@ -1,0 +1,10 @@
+There is already an account with this email: There is already an account with this email
+
+registration:
+    agree_terms: "You must agree to our terms of service."
+password:
+    required: "Please enter a password."
+    min_length: "Your password must be at least {{ limit }} characters long."
+    mismatch: "The two passwords must match."
+email:
+    required: "Please enter your email address."
