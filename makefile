@@ -104,3 +104,6 @@ migration: ## Generate a new migration
 
 migrate: ## Run database migrations
 	@$(SYMFONY) doctrine:migrations:migrate
+
+entity: ## Create a new entity in the chosen domain
+	@$(SYMFONY) do:entity

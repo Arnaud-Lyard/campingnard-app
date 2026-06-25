@@ -1,0 +1,13 @@
+{% set route = app.request.attributes.get('_route') %}
+{% set params = app.request.attributes.get('_route_params')|default({}) %}
+{% set current = app.request.locale %}
+<nav class="flex items-center gap-2" aria-label="{{ 'nav.language'|trans }}">
+    {% for locale in ['fr', 'en'] %}
+        <a href="{{ path(route, params|merge({_locale: locale})) }}"
+           hreflang="{{ locale }}"
+           aria-current="{{ locale == current ? 'true' : 'false' }}"
+           class="inline-flex rounded-sm transition {{ locale == current ? 'ring-2 ring-blue-500' : 'opacity-50 hover:opacity-100' }}">
+            {{ include('_partials/_flag_' ~ locale ~ '.html.twig') }}
+        </a>
+    {% endfor %}
+</nav>

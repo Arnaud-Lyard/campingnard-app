@@ -1,17 +1,18 @@
 <?php
 
-namespace App\Http\Controller;
+namespace App\Http\User\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-final class PagesController extends AbstractController
+#[Route("/user", name: "user_")]
+final class EquipmentController extends AbstractController
 {
-    #[Route("/", name: "home")]
+    #[Route("/equipment", name: "equipment_index")]
     public function index(): Response
     {
-        return $this->render("pages/index.html.twig", [
+        return $this->render("user/equipment/index.html.twig", [
             "controller_name" => "PagesController",
         ]);
     }

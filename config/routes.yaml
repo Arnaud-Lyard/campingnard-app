@@ -3,6 +3,16 @@ controllers:
         path: ../src/Http/Controller/
         namespace: App\Http\Controller
     type: attribute
+user_controllers:
+    resource:
+        path: ../src/Http/User/Controller/
+        namespace: App\Http\User\Controller
+    type: attribute
+public_controllers:
+    resource:
+        path: ../src/Http/Public/Controller/
+        namespace: App\Http\Public\Controller
+    type: attribute
     prefix: /{_locale}
     requirements:
         _locale: en|fr

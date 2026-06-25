@@ -13,6 +13,7 @@ nav:
     your_profile: "Your profile"
     open_sidebar: "Open sidebar"
     close_sidebar: "Close sidebar"
+    language: "Language selection"
 
 auth:
     email_label: "Email address"

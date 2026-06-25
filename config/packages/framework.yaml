@@ -5,12 +5,6 @@ framework:
     # Note that the session will be started ONLY if you read or write from it.
     session: true
 
-    # Restrict negotiated locales and set the request locale from the
-    # browser's Accept-Language header (see translation.yaml for the fallback).
-    enabled_locales: ["fr", "en"]
-    set_locale_from_accept_language: true
-    set_content_language_from_locale: true
-
     #esi: true
     #fragments: true
 
