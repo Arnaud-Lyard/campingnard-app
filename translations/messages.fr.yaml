@@ -14,6 +14,8 @@ nav:
     open_sidebar: "Ouvrir la barre latérale"
     close_sidebar: "Fermer la barre latérale"
     language: "Choix de la langue"
+    login: "Connexion"
+    back_to_site: "Retour au site"
 
 auth:
     email_label: "Adresse e-mail"
@@ -32,8 +34,13 @@ auth:
         heading: "Créez votre compte"
         already_registered: "Déjà inscrit ?"
         login_link: "Connectez-vous"
+        confirm_password_label: "Confirmez le mot de passe"
+        language_label: "Langue"
         agree_terms: "J'accepte les conditions d'utilisation"
         submit: "S'inscrire"
+    language:
+        fr: "🇫🇷 Français"
+        en: "🇬🇧 Anglais"
     reset_request:
         page_title: "Mot de passe oublié"
         heading: "Mot de passe oublié ?"

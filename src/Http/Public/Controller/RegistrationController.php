@@ -53,7 +53,7 @@ class RegistrationController extends AbstractController
                     ->from(new Address("mailer@camping.fr", "Camping"))
                     ->to((string) $user->getEmail())
                     ->subject($translator->trans("email.confirm.subject"))
-                    ->locale($request->getLocale())
+                    ->locale($user->getLocale())
                     ->htmlTemplate("registration/confirmation_email.html.twig"),
             );
 

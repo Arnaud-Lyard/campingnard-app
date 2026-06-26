@@ -1,0 +1,19 @@
+{% set route = app.request.attributes.get('_route') %}
+{% set params = app.request.attributes.get('_route_params')|default({}) %}
+{% set current = app.request.locale %}
+{% set labels = { fr: '🇫🇷 Français', en: '🇬🇧 English' } %}
+<div class="grid grid-cols-1">
+    <select aria-label="{{ 'nav.language'|trans }}"
+            onchange="window.location.href = this.value"
+            class="col-start-1 row-start-1 appearance-none rounded-md border border-gray-300 bg-white py-1 pr-8 pl-3 text-sm text-gray-900 shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:border-white/10 dark:bg-gray-800 dark:text-white dark:*:bg-gray-800">
+        {% for locale in ['fr', 'en'] %}
+            <option value="{{ path(route, params|merge({_locale: locale})) }}" {{ locale == current ? 'selected' : '' }}>
+                {{ labels[locale] }}
+            </option>
+        {% endfor %}
+    </select>
+    <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"
+         class="pointer-events-none col-start-1 row-start-1 mr-2 size-4 self-center justify-self-end text-gray-500 dark:text-gray-400">
+        <path d="M4.22 6.22a.75.75 0 0 1 1.06 0L8 8.94l2.72-2.72a.75.75 0 1 1 1.06 1.06l-3.25 3.25a.75.75 0 0 1-1.06 0L4.22 7.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" fill-rule="evenodd" />
+    </svg>
+</div>

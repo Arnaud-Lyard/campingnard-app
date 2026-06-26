@@ -5,7 +5,9 @@ namespace App\Domain\Auth\Form;
 use App\Domain\Auth\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
@@ -28,20 +30,38 @@ class RegistrationFormType extends AbstractType
                     ),
                 ],
             ])
-            ->add("plainPassword", PasswordType::class, [
+            ->add("plainPassword", RepeatedType::class, [
+                "type" => PasswordType::class,
+                "options" => [
+                    "attr" => ["autocomplete" => "new-password"],
+                ],
+                "first_options" => [
+                    "constraints" => [
+                        new NotBlank(message: "password.required"),
+                        new Length(
+                            min: 6,
+                            minMessage: "password.min_length",
+                            // max length allowed by Symfony for security reasons
+                            max: 4096,
+                        ),
+                    ],
+                    "label" => "auth.password_label",
+                ],
+                "second_options" => [
+                    "label" => "auth.register.confirm_password_label",
+                ],
+                "invalid_message" => "password.mismatch",
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
                 "mapped" => false,
-                "attr" => ["autocomplete" => "new-password"],
-                "constraints" => [
-                    new NotBlank(message: "password.required"),
-                    new Length(
-                        min: 6,
-                        minMessage: "password.min_length",
-                        // max length allowed by Symfony for security reasons
-                        max: 4096,
-                    ),
+            ])
+            ->add("locale", ChoiceType::class, [
+                "choices" => [
+                    "auth.language.fr" => "fr",
+                    "auth.language.en" => "en",
                 ],
+                "label" => "auth.register.language_label",
+                "placeholder" => false,
             ]);
     }
 

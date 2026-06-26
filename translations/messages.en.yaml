@@ -14,6 +14,8 @@ nav:
     open_sidebar: "Open sidebar"
     close_sidebar: "Close sidebar"
     language: "Language selection"
+    login: "Login"
+    back_to_site: "Back to site"
 
 auth:
     email_label: "Email address"
@@ -32,8 +34,13 @@ auth:
         heading: "Create your account"
         already_registered: "Already registered?"
         login_link: "Sign in"
+        confirm_password_label: "Confirm password"
+        language_label: "Language"
         agree_terms: "I agree to the terms of service"
         submit: "Sign up"
+    language:
+        fr: "🇫🇷 French"
+        en: "🇬🇧 English"
     reset_request:
         page_title: "Forgot password"
         heading: "Forgot your password?"
