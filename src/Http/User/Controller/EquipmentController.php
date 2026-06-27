@@ -2,6 +2,7 @@
 
 namespace App\Http\User\Controller;
 
+use App\Domain\Auth\Entity\User;
 use App\Domain\Equipment\Entity\Equipment;
 use App\Domain\Equipment\Enum\EquipmentStatus;
 use App\Domain\Equipment\Form\EquipmentType;
@@ -79,7 +80,7 @@ final class EquipmentController extends AbstractController
     public function index(EquipmentRepository $repository): Response
     {
         return $this->render("user/equipment/index.html.twig", [
-            "equipments" => $repository->findOrdered(),
+            "equipments" => $repository->findOrdered($this->currentUser()),
             "form" => $this->createForm(EquipmentType::class, new Equipment()),
         ]);
     }
@@ -87,6 +88,7 @@ final class EquipmentController extends AbstractController
     #[Route("/equipment", name: "equipment_create", methods: ["POST"])]
     public function create(Request $request, EntityManagerInterface $em, EquipmentRepository $repository): Response
     {
+        $user = $this->currentUser();
         $equipment = new Equipment();
         $form = $this->createForm(EquipmentType::class, $equipment);
         $form->handleRequest($request);
@@ -97,8 +99,9 @@ final class EquipmentController extends AbstractController
 
         $now = new \DateTimeImmutable();
         $equipment
+            ->setOwner($user)
             ->setStatus(EquipmentStatus::InProgress)
-            ->setOrdre($repository->getTopOrdre())
+            ->setOrdre($repository->getTopOrdre($user))
             ->setCreatedAt($now)
             ->setUpdatedAt($now);
         $em->persist($equipment);
@@ -112,13 +115,14 @@ final class EquipmentController extends AbstractController
     {
         $this->assertCsrf($request);
 
+        $user = $this->currentUser();
         $names = self::PRESET_LISTS[$request->getLocale()] ?? self::PRESET_LISTS["fr"];
-        $ordre = $repository->getTopOrdre();
+        $ordre = $repository->getTopOrdre($user);
 
         $rows = [];
         // Reverse so the first preset item ends up at the very top of the list.
         foreach (array_reverse($names) as $name) {
-            $equipment = $this->newEquipment($name, $ordre--);
+            $equipment = $this->newEquipment($name, $ordre--, $user);
             $em->persist($equipment);
             $rows[] = $equipment;
         }
@@ -143,9 +147,10 @@ final class EquipmentController extends AbstractController
             return new JsonResponse(["error" => "ids_required"], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
+        $user = $this->currentUser();
         $index = 0;
         foreach ($ids as $id) {
-            $equipment = $repository->find($id);
+            $equipment = $repository->findOneBy(["id" => $id, "owner" => $user]);
             if ($equipment) {
                 $equipment->setOrdre($index++);
                 $equipment->setUpdatedAt(new \DateTimeImmutable());
@@ -172,8 +177,9 @@ final class EquipmentController extends AbstractController
             return new JsonResponse(["error" => "ids_required"], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
+        $user = $this->currentUser();
         foreach ($ids as $id) {
-            $equipment = $repository->find($id);
+            $equipment = $repository->findOneBy(["id" => $id, "owner" => $user]);
             if ($equipment) {
                 $equipment->setStatus($status);
                 $equipment->setUpdatedAt(new \DateTimeImmutable());
@@ -194,8 +200,9 @@ final class EquipmentController extends AbstractController
             return new JsonResponse(["error" => "ids_required"], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
+        $user = $this->currentUser();
         foreach ($ids as $id) {
-            $equipment = $repository->find($id);
+            $equipment = $repository->findOneBy(["id" => $id, "owner" => $user]);
             if ($equipment) {
                 $em->remove($equipment);
             }
@@ -208,7 +215,7 @@ final class EquipmentController extends AbstractController
     #[Route("/equipment/{id}", name: "equipment_update", methods: ["POST"], requirements: ["id" => "\\d+"])]
     public function update(int $id, Request $request, EntityManagerInterface $em, EquipmentRepository $repository): Response
     {
-        $equipment = $repository->find($id);
+        $equipment = $repository->findOneBy(["id" => $id, "owner" => $this->currentUser()]);
         if (!$equipment) {
             return new JsonResponse(["error" => "not_found"], Response::HTTP_NOT_FOUND);
         }
@@ -231,7 +238,7 @@ final class EquipmentController extends AbstractController
     {
         $this->assertCsrf($request);
 
-        $equipment = $repository->find($id);
+        $equipment = $repository->findOneBy(["id" => $id, "owner" => $this->currentUser()]);
         if ($equipment) {
             $em->remove($equipment);
             $em->flush();
@@ -240,16 +247,27 @@ final class EquipmentController extends AbstractController
         return new JsonResponse(["ok" => true]);
     }
 
-    private function newEquipment(string $name, int $ordre): Equipment
+    private function newEquipment(string $name, int $ordre, User $owner): Equipment
     {
         $now = new \DateTimeImmutable();
 
         return (new Equipment())
             ->setName($name)
+            ->setOwner($owner)
             ->setStatus(EquipmentStatus::InProgress)
             ->setOrdre($ordre)
             ->setCreatedAt($now)
             ->setUpdatedAt($now);
+    }
+
+    private function currentUser(): User
+    {
+        $user = $this->getUser();
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException();
+        }
+
+        return $user;
     }
 
     private function rowResponse(Equipment $equipment, int $status = Response::HTTP_OK): JsonResponse

@@ -2,6 +2,7 @@
 
 namespace App\Domain\Equipment\Repository;
 
+use App\Domain\Auth\Entity\User;
 use App\Domain\Equipment\Entity\Equipment;
 use App\Domain\Equipment\Enum\EquipmentStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -18,15 +19,17 @@ class EquipmentRepository extends ServiceEntityRepository
     }
 
     /**
-     * Items ordered with "in progress" first, "completed" last, then by the
-     * manual order (ordre), then newest first as a tie-breaker.
+     * Items of the given owner, ordered with "in progress" first, "completed"
+     * last, then by the manual order (ordre), then newest first as a tie-breaker.
      *
      * @return Equipment[]
      */
-    public function findOrdered(?EquipmentStatus $status = null): array
+    public function findOrdered(User $owner, ?EquipmentStatus $status = null): array
     {
         $qb = $this->createQueryBuilder("e")
             ->addSelect("CASE WHEN e.status = :inProgress THEN 0 ELSE 1 END AS HIDDEN statusOrder")
+            ->andWhere("e.owner = :owner")
+            ->setParameter("owner", $owner)
             ->setParameter("inProgress", EquipmentStatus::InProgress)
             ->orderBy("statusOrder", "ASC")
             ->addOrderBy("e.ordre", "ASC")
@@ -40,12 +43,14 @@ class EquipmentRepository extends ServiceEntityRepository
     }
 
     /**
-     * Smallest "ordre" to assign to a new item so it floats to the top.
+     * Smallest "ordre" among the owner's items so a new one floats to the top.
      */
-    public function getTopOrdre(): int
+    public function getTopOrdre(User $owner): int
     {
         $min = $this->createQueryBuilder("e")
             ->select("MIN(e.ordre)")
+            ->andWhere("e.owner = :owner")
+            ->setParameter("owner", $owner)
             ->getQuery()
             ->getSingleScalarResult();
 

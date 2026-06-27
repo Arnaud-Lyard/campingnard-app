@@ -2,6 +2,7 @@
 
 namespace App\Domain\Equipment\Entity;
 
+use App\Domain\Auth\Entity\User;
 use App\Domain\Equipment\Enum\EquipmentStatus;
 use App\Domain\Equipment\Repository\EquipmentRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -28,6 +29,10 @@ class Equipment
 
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
+
+    #[ORM\ManyToOne(inversedBy: 'equipment')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $owner = null;
 
     public function getId(): ?int
     {
@@ -90,6 +95,18 @@ class Equipment
     public function setUpdatedAt(\DateTimeImmutable $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getOwner(): ?User
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(?User $owner): static
+    {
+        $this->owner = $owner;
 
         return $this;
     }
