@@ -109,11 +109,6 @@
     statusComplete: {{ 'equipment.status.complete'|trans|json_encode|raw }},
     markComplete: {{ 'equipment.actions.mark_complete'|trans|json_encode|raw }},
     markInProgress: {{ 'equipment.actions.mark_in_progress'|trans|json_encode|raw }},
-    confirmYes: {{ 'equipment.confirm.confirm'|trans|json_encode|raw }},
-    confirmCancel: {{ 'equipment.confirm.cancel'|trans|json_encode|raw }},
-    deleteTitle: {{ 'equipment.confirm.delete_title'|trans|json_encode|raw }},
-    deleteText: {{ 'equipment.confirm.delete_text'|trans|json_encode|raw }},
-    deleteBulkTitle: {{ 'equipment.confirm.delete_bulk_title'|trans|json_encode|raw }},
     modalCreateTitle: {{ 'equipment.modal.create_title'|trans|json_encode|raw }},
     modalEditTitle: {{ 'equipment.modal.edit_title'|trans|json_encode|raw }},
     selectAll: {{ 'equipment.select_all'|trans|json_encode|raw }},
@@ -160,11 +155,6 @@
 
     const Toast = Swal.mixin({ toast: true, position: 'top-end', showConfirmButton: false, timer: 3000, timerProgressBar: true });
     const toast = (title, icon = 'success') => Toast.fire({ icon, title });
-
-    const confirmDialog = (title, text) => Swal.fire({
-      title, text, icon: 'warning', showCancelButton: true,
-      confirmButtonText: I18N.confirmYes, cancelButtonText: I18N.confirmCancel, confirmButtonColor: '#dc2626',
-    }).then((r) => r.isConfirmed);
 
     // Requête serveur (form-encoded + token CSRF). ids transmis en ids[].
     const send = async (url, params = {}, method = 'POST') => {
@@ -269,10 +259,8 @@
       } else if (e.target.closest('.action-edit')) {
         openEdit(li);
       } else if (e.target.closest('.action-delete')) {
-        if (await confirmDialog(I18N.deleteTitle, I18N.deleteText)) {
-          try { await send(URLS.base + '/' + id, {}, 'DELETE'); li.remove(); toast(I18N.toastDeleted); refreshBulkBar(); updateProgress(); checkEmpty(); }
-          catch { toast(I18N.toastError, 'error'); }
-        }
+        try { await send(URLS.base + '/' + id, {}, 'DELETE'); li.remove(); toast(I18N.toastDeleted); refreshBulkBar(); updateProgress(); checkEmpty(); }
+        catch { toast(I18N.toastError, 'error'); }
       }
     });
 
@@ -280,17 +268,15 @@
       if (e.target.classList.contains('equipment-select')) refreshBulkBar();
     });
 
-    // Suppression groupée (avec confirmation SweetAlert)
+    // Suppression groupée (sans confirmation)
     document.getElementById('bulk-delete').addEventListener('click', async () => {
       const ids = selectedIds();
       if (!ids.length) return;
-      if (await confirmDialog(I18N.deleteBulkTitle, I18N.deleteText)) {
-        try {
-          await send(URLS.bulkDelete, { ids });
-          ids.forEach((id) => list.querySelector(`li[data-id="${id}"]`)?.remove());
-          toast(I18N.toastDeletedBulk); refreshBulkBar(); updateProgress(); checkEmpty();
-        } catch { toast(I18N.toastError, 'error'); }
-      }
+      try {
+        await send(URLS.bulkDelete, { ids });
+        ids.forEach((id) => list.querySelector(`li[data-id="${id}"]`)?.remove());
+        toast(I18N.toastDeletedBulk); refreshBulkBar(); updateProgress(); checkEmpty();
+      } catch { toast(I18N.toastError, 'error'); }
     });
 
     // Changement de statut groupé : toast seul, sans confirmation
