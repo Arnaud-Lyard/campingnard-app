@@ -3,6 +3,18 @@ controllers:
         path: ../src/Http/Controller/
         namespace: App\Http\Controller
     type: attribute
+
+# Mobile JSON API. The json_login authenticator intercepts this path; no controller needed.
+api_login_check:
+    path: /api/login_check
+    methods: [POST]
+
+api_controllers:
+    resource:
+        path: ../src/Http/Api/Controller/
+        namespace: App\Http\Api\Controller
+    type: attribute
+    prefix: /api
 user_controllers:
     resource:
         path: ../src/Http/User/Controller/

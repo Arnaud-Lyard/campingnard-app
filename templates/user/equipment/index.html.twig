@@ -13,13 +13,19 @@
   </div>
 </div>
 
-{# Filtre par statut (côté client) + sélection globale #}
-<div class="mt-4 flex flex-wrap items-center justify-between gap-2">
-  <span class="isolate inline-flex rounded-md shadow-xs">
-    <button type="button" data-filter="all" class="equipment-filter relative inline-flex items-center gap-x-1.5 rounded-l-md px-3 py-1.5 text-sm font-medium focus:z-10">{{ 'equipment.filter.all'|trans }} <span data-count="all" class="rounded-full bg-black/5 px-1.5 text-xs/5 dark:bg-white/10">0</span></button>
-    <button type="button" data-filter="in_progress" class="equipment-filter relative -ml-px inline-flex items-center gap-x-1.5 px-3 py-1.5 text-sm font-medium focus:z-10">{{ 'equipment.filter.in_progress'|trans }} <span data-count="in_progress" class="rounded-full bg-black/5 px-1.5 text-xs/5 dark:bg-white/10">0</span></button>
-    <button type="button" data-filter="complete" class="equipment-filter relative -ml-px inline-flex items-center gap-x-1.5 rounded-r-md px-3 py-1.5 text-sm font-medium focus:z-10">{{ 'equipment.filter.complete'|trans }} <span data-count="complete" class="rounded-full bg-black/5 px-1.5 text-xs/5 dark:bg-white/10">0</span></button>
-  </span>
+{# Jauge de progression : équipements terminés / total #}
+<div id="progress-gauge" class="mt-4" {{ equipments is empty ? 'hidden' : '' }}>
+  <div class="flex items-center justify-between text-sm">
+    <span class="font-medium text-gray-700 dark:text-gray-300">{{ 'equipment.progress.label'|trans }}</span>
+    <span data-progress-count class="tabular-nums text-gray-500 dark:text-gray-400">0 / 0</span>
+  </div>
+  <div class="mt-2 h-2.5 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-white/10">
+    <div data-progress-bar class="h-full rounded-full bg-green-500 transition-[width] duration-300 dark:bg-green-400" style="width: 0%"></div>
+  </div>
+</div>
+
+{# Sélection globale #}
+<div class="mt-4 flex justify-end">
   <button id="select-all" type="button" class="inline-flex items-center rounded-md bg-white px-3 py-1.5 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:shadow-none dark:inset-ring-white/5 dark:hover:bg-white/20">{{ 'equipment.select_all'|trans }}</button>
 </div>
 
@@ -181,16 +187,26 @@
       toggle.innerHTML = ICONS[state];
       toggle.setAttribute('aria-label', STATUS[state].toggle);
       toggle.setAttribute('title', STATUS[state].toggle);
+      // Équipement terminé : texte barré et grisé
+      const done = state === 'complete';
+      const name = li.querySelector('.equipment-name');
+      name.classList.toggle('line-through', done);
+      name.classList.toggle('text-gray-400', done);
+      name.classList.toggle('dark:text-gray-500', done);
+      name.classList.toggle('text-gray-900', !done);
+      name.classList.toggle('dark:text-white', !done);
     };
 
     const initRow = (li) => applyStatus(li, li.dataset.status);
     list.querySelectorAll('li').forEach(initRow);
 
+    const gauge = document.getElementById('progress-gauge');
     const checkEmpty = () => {
       const hasItems = list.querySelectorAll('li').length > 0;
       list.hidden = !hasItems;
       emptyState.hidden = hasItems;
       generateBtn.hidden = hasItems;
+      gauge.hidden = !hasItems;
       if (!hasItems) bulkBar.hidden = true;
     };
 
@@ -212,47 +228,21 @@
 
     const generateBtn = document.getElementById('generate-list');
 
-    // Compteurs affichés dans les filtres
-    const updateCounts = () => {
+    // Jauge de progression : équipements terminés / total
+    const progressBar = gauge.querySelector('[data-progress-bar]');
+    const progressCount = gauge.querySelector('[data-progress-count]');
+    const updateProgress = () => {
       const total = list.querySelectorAll('li').length;
-      const ip = list.querySelectorAll('li[data-status="in_progress"]').length;
-      document.querySelector('[data-count="all"]').textContent = total;
-      document.querySelector('[data-count="in_progress"]').textContent = ip;
-      document.querySelector('[data-count="complete"]').textContent = total - ip;
-    };
-
-    // Re-tri identique au serveur : en cours d'abord, terminés à la fin, puis ordre, puis créé récent
-    const sortList = () => {
-      const rank = (li) => (li.dataset.status === 'in_progress' ? 0 : 1);
-      [...list.children]
-        .sort((a, b) =>
-          (rank(a) - rank(b))
-          || (Number(a.dataset.ordre) - Number(b.dataset.ordre))
-          || (Number(b.dataset.created) - Number(a.dataset.created)))
-        .forEach((li) => list.appendChild(li));
+      const done = list.querySelectorAll('li[data-status="complete"]').length;
+      progressCount.textContent = done + ' / ' + total;
+      progressBar.style.width = (total ? Math.round((done / total) * 100) : 0) + '%';
     };
 
     // Recale data-ordre sur la position courante (après drag / monter / descendre)
     const reindexOrdre = () => [...list.children].forEach((li, i) => { li.dataset.ordre = i; });
 
-    // Filtre côté client
-    const FILTER_ACTIVE = 'bg-indigo-600 text-white';
-    const FILTER_IDLE = 'bg-white text-gray-900 inset-ring inset-ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:inset-ring-white/5 dark:hover:bg-white/20';
-    const filterButtons = document.querySelectorAll('.equipment-filter');
-    let currentFilter = 'all';
-    const applyFilter = () => {
-      filterButtons.forEach((b) => {
-        const active = b.dataset.filter === currentFilter;
-        b.className = b.className.replace(FILTER_ACTIVE, '').replace(FILTER_IDLE, '').trim() + ' ' + (active ? FILTER_ACTIVE : FILTER_IDLE);
-      });
-      list.querySelectorAll('li').forEach((li) => {
-        li.hidden = currentFilter !== 'all' && li.dataset.status !== currentFilter;
-      });
-      refreshBulkBar();
-    };
-    filterButtons.forEach((b) => b.addEventListener('click', () => { currentFilter = b.dataset.filter; applyFilter(); }));
-    applyFilter();
-    updateCounts();
+    updateProgress();
+    refreshBulkBar();
     checkEmpty();
 
     // Réorganisation par drag & drop
@@ -274,28 +264,17 @@
 
       if (e.target.closest('.status-toggle')) {
         const next = li.dataset.status === 'in_progress' ? 'complete' : 'in_progress';
-        try { await send(URLS.status, { ids: [id], status: next }); applyStatus(li, next); sortList(); applyFilter(); updateCounts(); toast(I18N.toastStatusChanged); }
+        try { await send(URLS.status, { ids: [id], status: next }); applyStatus(li, next); updateProgress(); toast(I18N.toastStatusChanged); }
         catch { toast(I18N.toastError, 'error'); }
       } else if (e.target.closest('.action-edit')) {
         openEdit(li);
-      } else if (e.target.closest('.action-move-up')) {
-        const prev = li.previousElementSibling;
-        if (prev) { list.insertBefore(li, prev); await persistOrder(); }
-      } else if (e.target.closest('.action-move-down')) {
-        const next = li.nextElementSibling;
-        if (next) { list.insertBefore(next, li); await persistOrder(); }
       } else if (e.target.closest('.action-delete')) {
         if (await confirmDialog(I18N.deleteTitle, I18N.deleteText)) {
-          try { await send(URLS.base + '/' + id, {}, 'DELETE'); li.remove(); toast(I18N.toastDeleted); refreshBulkBar(); updateCounts(); checkEmpty(); }
+          try { await send(URLS.base + '/' + id, {}, 'DELETE'); li.remove(); toast(I18N.toastDeleted); refreshBulkBar(); updateProgress(); checkEmpty(); }
           catch { toast(I18N.toastError, 'error'); }
         }
       }
     });
-
-    const persistOrder = async () => {
-      try { await send(URLS.reorder, { ids: orderedIds() }); reindexOrdre(); toast(I18N.toastOrderUpdated, 'info'); }
-      catch { toast(I18N.toastError, 'error'); location.reload(); }
-    };
 
     list.addEventListener('change', (e) => {
       if (e.target.classList.contains('equipment-select')) refreshBulkBar();
@@ -309,7 +288,7 @@
         try {
           await send(URLS.bulkDelete, { ids });
           ids.forEach((id) => list.querySelector(`li[data-id="${id}"]`)?.remove());
-          toast(I18N.toastDeletedBulk); refreshBulkBar(); updateCounts(); checkEmpty();
+          toast(I18N.toastDeletedBulk); refreshBulkBar(); updateProgress(); checkEmpty();
         } catch { toast(I18N.toastError, 'error'); }
       }
     });
@@ -321,7 +300,7 @@
       try {
         await send(URLS.status, { ids, status: state });
         ids.forEach((id) => { const li = list.querySelector(`li[data-id="${id}"]`); if (li) applyStatus(li, state); });
-        clearSelection(); sortList(); applyFilter(); updateCounts(); toast(I18N.toastStatusChanged);
+        clearSelection(); updateProgress(); toast(I18N.toastStatusChanged);
       } catch { toast(I18N.toastError, 'error'); }
     };
     document.getElementById('bulk-in-progress').addEventListener('click', () => bulkSetStatus('in_progress'));
@@ -364,7 +343,7 @@
         toast(I18N.toastCreated);
       }
       cancelBtn.click();
-      applyFilter(); refreshBulkBar(); updateCounts(); checkEmpty();
+      refreshBulkBar(); updateProgress(); checkEmpty();
     };
 
     form.addEventListener('submit', async (e) => {
@@ -383,7 +362,7 @@
         const { html } = await res.json();
         list.insertAdjacentHTML('afterbegin', html);
         list.querySelectorAll('li').forEach(initRow);
-        reindexOrdre(); applyFilter(); updateCounts(); checkEmpty(); toast(I18N.toastGenerated);
+        reindexOrdre(); refreshBulkBar(); updateProgress(); checkEmpty(); toast(I18N.toastGenerated);
       } catch { toast(I18N.toastError, 'error'); }
     });
   });

@@ -115,3 +115,6 @@ entity: ## Create a new entity in the chosen domain
 
 battery-reminders: ## Send battery recharge reminders that are due
 	@$(SYMFONY) app:battery:send-reminders
+
+generate-keypair: ## Generate a new encryption key
+	@$(SYMFONY) lexik:jwt:generate-keypair

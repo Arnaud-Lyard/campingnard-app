@@ -19,20 +19,18 @@ class EquipmentRepository extends ServiceEntityRepository
     }
 
     /**
-     * Items of the given owner, ordered with "in progress" first, "completed"
-     * last, then by the manual order (ordre), then newest first as a tie-breaker.
+     * Items of the given owner, ordered by the manual order (ordre), then newest
+     * first as a tie-breaker. Status no longer affects ordering: items stay where
+     * the user placed them regardless of whether they are completed.
      *
      * @return Equipment[]
      */
     public function findOrdered(User $owner, ?EquipmentStatus $status = null): array
     {
         $qb = $this->createQueryBuilder("e")
-            ->addSelect("CASE WHEN e.status = :inProgress THEN 0 ELSE 1 END AS HIDDEN statusOrder")
             ->andWhere("e.owner = :owner")
             ->setParameter("owner", $owner)
-            ->setParameter("inProgress", EquipmentStatus::InProgress)
-            ->orderBy("statusOrder", "ASC")
-            ->addOrderBy("e.ordre", "ASC")
+            ->orderBy("e.ordre", "ASC")
             ->addOrderBy("e.createdAt", "DESC");
 
         if (null !== $status) {

@@ -3,15 +3,15 @@
 namespace App\Http\Public\Controller;
 
 use App\Domain\Auth\Entity\User;
+use App\Domain\Auth\Event\UserCreatedEvent;
 use App\Domain\Auth\Form\RegistrationFormType;
 use App\Domain\Auth\Repository\UserRepository;
 use App\Domain\Auth\Security\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -19,7 +19,10 @@ use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 class RegistrationController extends AbstractController
 {
-    public function __construct(private EmailVerifier $emailVerifier) {}
+    public function __construct(
+        private EmailVerifier $emailVerifier,
+        private readonly EventDispatcherInterface $dispatcher,
+    ) {}
 
     #[Route("/register", name: "app_register")]
     public function register(
@@ -45,19 +48,9 @@ class RegistrationController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation(
-                "app_verify_email",
-                $user,
-                new TemplatedEmail()
-                    ->from(new Address("mailer@camping.fr", "Camping"))
-                    ->to((string) $user->getEmail())
-                    ->subject($translator->trans("email.confirm.subject"))
-                    ->locale($user->getLocale())
-                    ->htmlTemplate("registration/confirmation_email.html.twig"),
+            $this->dispatcher->dispatch(
+                new UserCreatedEvent($user, $user->getLocale()),
             );
-
-            // do anything else you need here, like send an email
 
             return $this->redirectToRoute("app_login");
         }

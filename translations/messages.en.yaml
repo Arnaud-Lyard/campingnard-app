@@ -71,10 +71,8 @@ equipment:
     status:
         in_progress: "In progress"
         complete: "Complete"
-    filter:
-        all: "All"
-        in_progress: "In progress"
-        complete: "Completed"
+    progress:
+        label: "Progress"
     actions:
         open_menu: "Open menu"
         edit: "Edit"

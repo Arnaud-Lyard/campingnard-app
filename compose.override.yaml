@@ -22,6 +22,10 @@ services:
       # See https://xdebug.org/docs/all_settings#mode
       XDEBUG_MODE: "${XDEBUG_MODE:-develop}"
       APP_ENV: "${APP_ENV:-dev}"
+      # Serve plain HTTP on :80 for ANY host (":80" = catch-all, no TLS/redirect),
+      # so a phone can reach the API at http://<PC-LAN-IP>/. Keep HTTPS on :443 for
+      # localhost web dev. RN can't use the untrusted :443 cert, so it uses http://.
+      SERVER_NAME: ":80, https://localhost"
     extra_hosts:
       # Ensure that host.docker.internal is correctly defined on Linux
       - host.docker.internal:host-gateway

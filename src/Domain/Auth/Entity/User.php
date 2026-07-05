@@ -22,6 +22,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 ]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    public const SUPPORTED_LOCALES = ["fr", "en"];
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -51,7 +53,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Equipment>
      */
-    #[ORM\OneToMany(targetEntity: Equipment::class, mappedBy: 'owner')]
+    #[ORM\OneToMany(targetEntity: Equipment::class, mappedBy: "owner")]
     private Collection $equipment;
 
     public function __construct()

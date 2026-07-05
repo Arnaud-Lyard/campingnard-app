@@ -5,6 +5,7 @@ namespace App\Http\User\Controller;
 use App\Domain\Auth\Entity\User;
 use App\Domain\Equipment\Entity\Equipment;
 use App\Domain\Equipment\Enum\EquipmentStatus;
+use App\Domain\Equipment\EquipmentPresets;
 use App\Domain\Equipment\Form\EquipmentType;
 use App\Domain\Equipment\Repository\EquipmentRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -25,56 +26,6 @@ final class EquipmentController extends AbstractController
         private readonly TranslatorInterface $translator,
     ) {
     }
-
-    /**
-     * Predefined camping/caravan packing lists, by locale.
-     */
-    private const PRESET_LISTS = [
-        "fr" => [
-            "Tente",
-            "Sac de couchage",
-            "Matelas gonflable",
-            "Réchaud de camping",
-            "Bouteille de gaz",
-            "Glacière",
-            "Lampe frontale",
-            "Table pliante",
-            "Chaises pliantes",
-            "Trousse de premiers secours",
-            "Kit de vaisselle",
-            "Couteau multifonction",
-            "Bâche de sol",
-            "Câble électrique caravane",
-            "Cales de roue",
-            "Tuyau d'eau potable",
-            "Produit vaisselle biodégradable",
-            "Sacs poubelle",
-            "Anti-moustiques",
-            "Chargeur portable",
-        ],
-        "en" => [
-            "Tent",
-            "Sleeping bag",
-            "Air mattress",
-            "Camping stove",
-            "Gas bottle",
-            "Cooler",
-            "Headlamp",
-            "Folding table",
-            "Folding chairs",
-            "First aid kit",
-            "Cookware set",
-            "Multi-tool knife",
-            "Ground sheet",
-            "Caravan power cable",
-            "Wheel chocks",
-            "Fresh water hose",
-            "Biodegradable dish soap",
-            "Bin bags",
-            "Insect repellent",
-            "Power bank",
-        ],
-    ];
 
     #[Route("/equipment", name: "equipment_index", methods: ["GET"])]
     public function index(EquipmentRepository $repository): Response
@@ -119,7 +70,7 @@ final class EquipmentController extends AbstractController
         $this->assertCsrf($request);
 
         $user = $this->currentUser();
-        $names = self::PRESET_LISTS[$request->getLocale()] ?? self::PRESET_LISTS["fr"];
+        $names = EquipmentPresets::forLocale($request->getLocale());
 
         // Free the top slots (0..count-1) for the generated items.
         $repository->shiftDown($user, \count($names));
