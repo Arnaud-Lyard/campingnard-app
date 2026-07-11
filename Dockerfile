@@ -1,7 +1,7 @@
 #syntax=docker/dockerfile:1
 
 # Versions
-FROM dunglas/frankenphp:1-php8.5 AS frankenphp_upstream
+FROM dunglas/frankenphp:1-php8.4 AS frankenphp_upstream
 
 # The different stages of this Dockerfile are meant to be built into separate images
 # https://docs.docker.com/build/building/multi-stage/#stop-at-a-specific-build-stage
@@ -21,13 +21,23 @@ RUN <<-EOF
 	apt-get update
 	apt-get install -y --no-install-recommends \
 		file \
-		git
+		git \
+		autoconf \
+		make \
+		g++
 	install-php-extensions \
 		@composer \
-		apcu \
 		intl \
 		opcache \
 		zip
+	curl -fsSL https://github.com/krakjoe/apcu/archive/refs/tags/v5.1.24.tar.gz | tar -xz -C /tmp
+	cd /tmp/apcu-5.1.24
+	phpize
+	./configure
+	make -j"$(nproc)"
+	make install
+	docker-php-ext-enable apcu
+	cd /tmp && rm -rf apcu-5.1.24
 	rm -rf /var/lib/apt/lists/*
 EOF
 
@@ -73,7 +83,14 @@ RUN <<-EOF
 		iptables \
 		jq \
 		sudo
-	install-php-extensions xdebug
+	curl -fsSL https://github.com/xdebug/xdebug/archive/refs/tags/3.4.3.tar.gz | tar -xz -C /tmp
+	cd /tmp/xdebug-3.4.3
+	phpize
+	./configure
+	make -j"$(nproc)"
+	make install
+	docker-php-ext-enable xdebug
+	cd /tmp && rm -rf xdebug-3.4.3
 	rm -rf /var/lib/apt/lists/*
 	useradd -m -s /bin/bash nonroot
 	echo "nonroot ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/nonroot

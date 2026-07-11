@@ -1,12 +1,8 @@
 <?php
 
-namespace App\Domain\Equipment;
+namespace App\Domain\Checklist;
 
-/**
- * Predefined camping/caravan packing lists, by locale. Shared between the web
- * (EquipmentController) and the mobile JSON API (EquipmentApiController).
- */
-final class EquipmentPresets
+final class ChecklistPresets
 {
     private const LISTS = [
         "fr" => [

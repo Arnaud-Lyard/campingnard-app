@@ -2,21 +2,21 @@
 
 {% block content %}
 
-<input type="hidden" id="csrf-token" value="{{ csrf_token('equipment') }}">
+<input type="hidden" id="csrf-token" value="{{ csrf_token('checklist') }}">
 
 {# Header : créer, générer une liste #}
 <div class="border-b border-gray-200 pb-5 sm:flex sm:items-center sm:justify-between dark:border-white/10">
-  <h3 class="text-base font-semibold text-gray-900 dark:text-white">{{ 'equipment.title'|trans }}</h3>
+  <h3 class="text-base font-semibold text-gray-900 dark:text-white">{{ 'checklist.title'|trans }}</h3>
   <div class="mt-3 flex sm:mt-0 sm:ml-4">
-    <button id="generate-list" type="button" {{ equipments is not empty ? 'hidden' : '' }} class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:shadow-none dark:inset-ring-white/5 dark:hover:bg-white/20">{{ 'equipment.generate'|trans }}</button>
-    <button id="create-equipment" type="button" command="show-modal" commandfor="equipment-dialog" class="ml-3 inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:shadow-none dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500">{{ 'equipment.create'|trans }}</button>
+    <button id="generate-list" type="button" {{ checklists is not empty ? 'hidden' : '' }} class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:shadow-none dark:inset-ring-white/5 dark:hover:bg-white/20">{{ 'checklist.generate'|trans }}</button>
+    <button id="create-checklist" type="button" command="show-modal" commandfor="checklist-dialog" class="ml-3 inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:shadow-none dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500">{{ 'checklist.create'|trans }}</button>
   </div>
 </div>
 
 {# Jauge de progression : équipements terminés / total #}
-<div id="progress-gauge" class="mt-4" {{ equipments is empty ? 'hidden' : '' }}>
+<div id="progress-gauge" class="mt-4" {{ checklists is empty ? 'hidden' : '' }}>
   <div class="flex items-center justify-between text-sm">
-    <span class="font-medium text-gray-700 dark:text-gray-300">{{ 'equipment.progress.label'|trans }}</span>
+    <span class="font-medium text-gray-700 dark:text-gray-300">{{ 'checklist.progress.label'|trans }}</span>
     <span data-progress-count class="tabular-nums text-gray-500 dark:text-gray-400">0 / 0</span>
   </div>
   <div class="mt-2 h-2.5 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-white/10">
@@ -26,70 +26,70 @@
 
 {# Sélection globale #}
 <div class="mt-4 flex justify-end">
-  <button id="select-all" type="button" class="inline-flex items-center rounded-md bg-white px-3 py-1.5 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:shadow-none dark:inset-ring-white/5 dark:hover:bg-white/20">{{ 'equipment.select_all'|trans }}</button>
+  <button id="select-all" type="button" class="inline-flex items-center rounded-md bg-white px-3 py-1.5 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:shadow-none dark:inset-ring-white/5 dark:hover:bg-white/20">{{ 'checklist.select_all'|trans }}</button>
 </div>
 
 {# Barre d'actions groupées : masquée tant qu'aucune checkbox n'est cochée #}
 <div id="bulk-bar" hidden class="mt-4 flex flex-col gap-3 rounded-lg bg-indigo-50 px-4 py-3 shadow-sm ring-1 ring-inset ring-indigo-600/20 sm:flex-row sm:items-center sm:justify-between dark:bg-indigo-500/10 dark:ring-indigo-400/20">
-  <p class="text-sm font-semibold text-indigo-900 dark:text-indigo-200"><span id="bulk-count">0</span> {{ 'equipment.bulk.selected_label'|trans }}</p>
+  <p class="text-sm font-semibold text-indigo-900 dark:text-indigo-200"><span id="bulk-count">0</span> {{ 'checklist.bulk.selected_label'|trans }}</p>
   <div class="flex items-center gap-x-1">
     <div class="group relative">
-      <button id="bulk-in-progress" type="button" title="{{ 'equipment.bulk.mark_all_in_progress'|trans }}" aria-label="{{ 'equipment.bulk.mark_all_in_progress'|trans }}" class="flex rounded-md p-2 text-gray-600 hover:bg-white hover:text-indigo-700 dark:text-gray-300 dark:hover:bg-white/10 dark:hover:text-white">
+      <button id="bulk-in-progress" type="button" title="{{ 'checklist.bulk.mark_all_in_progress'|trans }}" aria-label="{{ 'checklist.bulk.mark_all_in_progress'|trans }}" class="flex rounded-md p-2 text-gray-600 hover:bg-white hover:text-indigo-700 dark:text-gray-300 dark:hover:bg-white/10 dark:hover:text-white">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" class="size-5"><circle cx="12" cy="12" r="9" /></svg>
       </button>
     </div>
     <div class="group relative">
-      <button id="bulk-complete" type="button" title="{{ 'equipment.bulk.mark_all_complete'|trans }}" aria-label="{{ 'equipment.bulk.mark_all_complete'|trans }}" class="flex rounded-md p-2 text-gray-600 hover:bg-white hover:text-green-700 dark:text-gray-300 dark:hover:bg-white/10 dark:hover:text-green-400">
+      <button id="bulk-complete" type="button" title="{{ 'checklist.bulk.mark_all_complete'|trans }}" aria-label="{{ 'checklist.bulk.mark_all_complete'|trans }}" class="flex rounded-md p-2 text-gray-600 hover:bg-white hover:text-green-700 dark:text-gray-300 dark:hover:bg-white/10 dark:hover:text-green-400">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="size-5"><path d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" /></svg>
       </button>
     </div>
     <div class="group relative">
-        <button id="bulk-delete" type="button" title="{{ 'equipment.bulk.delete'|trans }}" aria-label="{{ 'equipment.bulk.delete'|trans }}" class="flex rounded-md p-2 text-gray-600 hover:bg-white hover:text-red-600 dark:text-gray-300 dark:hover:bg-white/10 dark:hover:text-red-400">
+        <button id="bulk-delete" type="button" title="{{ 'checklist.bulk.delete'|trans }}" aria-label="{{ 'checklist.bulk.delete'|trans }}" class="flex rounded-md p-2 text-gray-600 hover:bg-white hover:text-red-600 dark:text-gray-300 dark:hover:bg-white/10 dark:hover:text-red-400">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" class="size-5"><path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.02-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" /></svg>
       </button>
     </div>
   </div>
 </div>
 
-<ul id="equipment-list" role="list" {{ equipments is empty ? 'hidden' : '' }} class="mt-2 divide-y divide-gray-100 dark:divide-white/5">
-  {% for equipment in equipments %}
-    {{ include('user/equipment/_row.html.twig') }}
+<ul id="checklist-list" role="list" {{ checklists is empty ? 'hidden' : '' }} class="mt-2 divide-y divide-gray-100 dark:divide-white/5">
+  {% for checklist in checklists %}
+    {{ include('user/checklist/_row.html.twig') }}
   {% endfor %}
 </ul>
 
 {# État vide : affiché quand il ne reste plus aucun équipement #}
-<div id="empty-state" {{ equipments is empty ? '' : 'hidden' }} class="mt-10 text-center">
+<div id="empty-state" {{ checklists is empty ? '' : 'hidden' }} class="mt-10 text-center">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true" class="mx-auto size-12 text-gray-400 dark:text-gray-500">
     <path d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" />
   </svg>
-  <h3 class="mt-2 text-sm font-semibold text-gray-900 dark:text-white">{{ 'equipment.empty.title'|trans }}</h3>
-  <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ 'equipment.empty.text'|trans }}</p>
+  <h3 class="mt-2 text-sm font-semibold text-gray-900 dark:text-white">{{ 'checklist.empty.title'|trans }}</h3>
+  <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ 'checklist.empty.text'|trans }}</p>
   <div class="mt-6">
-    <button id="empty-create" type="button" command="show-modal" commandfor="equipment-dialog" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:shadow-none dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500">
+    <button id="empty-create" type="button" command="show-modal" commandfor="checklist-dialog" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:shadow-none dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500">
       <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="mr-1.5 -ml-0.5 size-5">
         <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
       </svg>
-      {{ 'equipment.empty.cta'|trans }}
+      {{ 'checklist.empty.cta'|trans }}
     </button>
   </div>
 </div>
 
 {# Modal de création / édition #}
 <el-dialog>
-  <dialog id="equipment-dialog" aria-labelledby="equipment-dialog-title" class="fixed inset-0 size-auto max-h-none max-w-none overflow-y-auto bg-transparent backdrop:bg-transparent">
+  <dialog id="checklist-dialog" aria-labelledby="checklist-dialog-title" class="fixed inset-0 size-auto max-h-none max-w-none overflow-y-auto bg-transparent backdrop:bg-transparent">
     <el-dialog-backdrop class="fixed inset-0 bg-gray-500/75 transition-opacity data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in dark:bg-gray-900/50"></el-dialog-backdrop>
     <div tabindex="0" class="flex min-h-full items-end justify-center p-4 text-center focus:outline-none sm:items-center sm:p-0">
       <el-dialog-panel class="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all data-closed:translate-y-4 data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in sm:my-8 sm:w-full sm:max-w-sm sm:p-6 data-closed:sm:translate-y-0 data-closed:sm:scale-95 dark:bg-gray-800 dark:outline dark:-outline-offset-1 dark:outline-white/10">
-        {{ form_start(form, {'attr': {'id': 'equipment-form', 'novalidate': 'novalidate'}}) }}
-          <h3 id="equipment-dialog-title" class="text-base font-semibold text-gray-900 dark:text-white">{{ 'equipment.modal.create_title'|trans }}</h3>
+        {{ form_start(form, {'attr': {'id': 'checklist-form', 'novalidate': 'novalidate'}}) }}
+          <h3 id="checklist-dialog-title" class="text-base font-semibold text-gray-900 dark:text-white">{{ 'checklist.modal.create_title'|trans }}</h3>
           <div class="mt-4">
             {{ form_label(form.name, null, {'label_attr': {'class': 'block text-sm/6 font-medium text-gray-900 dark:text-white'}}) }}
-            {{ form_widget(form.name, {'attr': {'class': 'mt-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10', 'placeholder': 'equipment.modal.name_placeholder'|trans, 'maxlength': 510}}) }}
-            <p id="equipment-error" hidden class="mt-2 text-sm text-red-600 dark:text-red-400"></p>
+            {{ form_widget(form.name, {'attr': {'class': 'mt-2 block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10', 'placeholder': 'checklist.modal.name_placeholder'|trans, 'maxlength': 510}}) }}
+            <p id="checklist-error" hidden class="mt-2 text-sm text-red-600 dark:text-red-400"></p>
           </div>
           <div class="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
-            <button type="submit" class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 sm:col-start-2 dark:bg-indigo-500 dark:hover:bg-indigo-400">{{ 'equipment.modal.save'|trans }}</button>
-            <button type="button" id="equipment-cancel" command="close" commandfor="equipment-dialog" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50 sm:col-start-1 sm:mt-0 dark:bg-white/10 dark:text-white dark:inset-ring-white/5 dark:hover:bg-white/20">{{ 'equipment.modal.cancel'|trans }}</button>
+            <button type="submit" class="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 sm:col-start-2 dark:bg-indigo-500 dark:hover:bg-indigo-400">{{ 'checklist.modal.save'|trans }}</button>
+            <button type="button" id="checklist-cancel" command="close" commandfor="checklist-dialog" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50 sm:col-start-1 sm:mt-0 dark:bg-white/10 dark:text-white dark:inset-ring-white/5 dark:hover:bg-white/20">{{ 'checklist.modal.cancel'|trans }}</button>
           </div>
         {{ form_end(form) }}
       </el-dialog-panel>
@@ -105,43 +105,43 @@
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1/Sortable.min.js"></script>
 <script>
   const I18N = {
-    statusInProgress: {{ 'equipment.status.in_progress'|trans|json_encode|raw }},
-    statusComplete: {{ 'equipment.status.complete'|trans|json_encode|raw }},
-    markComplete: {{ 'equipment.actions.mark_complete'|trans|json_encode|raw }},
-    markInProgress: {{ 'equipment.actions.mark_in_progress'|trans|json_encode|raw }},
-    modalCreateTitle: {{ 'equipment.modal.create_title'|trans|json_encode|raw }},
-    modalEditTitle: {{ 'equipment.modal.edit_title'|trans|json_encode|raw }},
-    selectAll: {{ 'equipment.select_all'|trans|json_encode|raw }},
-    deselectAll: {{ 'equipment.deselect_all'|trans|json_encode|raw }},
-    toastOrderUpdated: {{ 'equipment.toast.order_updated'|trans|json_encode|raw }},
-    toastDeleted: {{ 'equipment.toast.deleted'|trans|json_encode|raw }},
-    toastDeletedBulk: {{ 'equipment.toast.deleted_bulk'|trans|json_encode|raw }},
-    toastStatusChanged: {{ 'equipment.toast.status_changed'|trans|json_encode|raw }},
-    toastCreated: {{ 'equipment.toast.created'|trans|json_encode|raw }},
-    toastUpdated: {{ 'equipment.toast.updated'|trans|json_encode|raw }},
-    toastGenerated: {{ 'equipment.toast.generated'|trans|json_encode|raw }},
-    toastError: {{ 'equipment.toast.error'|trans|json_encode|raw }},
+    statusInProgress: {{ 'checklist.status.in_progress'|trans|json_encode|raw }},
+    statusComplete: {{ 'checklist.status.complete'|trans|json_encode|raw }},
+    markComplete: {{ 'checklist.actions.mark_complete'|trans|json_encode|raw }},
+    markInProgress: {{ 'checklist.actions.mark_in_progress'|trans|json_encode|raw }},
+    modalCreateTitle: {{ 'checklist.modal.create_title'|trans|json_encode|raw }},
+    modalEditTitle: {{ 'checklist.modal.edit_title'|trans|json_encode|raw }},
+    selectAll: {{ 'checklist.select_all'|trans|json_encode|raw }},
+    deselectAll: {{ 'checklist.deselect_all'|trans|json_encode|raw }},
+    toastOrderUpdated: {{ 'checklist.toast.order_updated'|trans|json_encode|raw }},
+    toastDeleted: {{ 'checklist.toast.deleted'|trans|json_encode|raw }},
+    toastDeletedBulk: {{ 'checklist.toast.deleted_bulk'|trans|json_encode|raw }},
+    toastStatusChanged: {{ 'checklist.toast.status_changed'|trans|json_encode|raw }},
+    toastCreated: {{ 'checklist.toast.created'|trans|json_encode|raw }},
+    toastUpdated: {{ 'checklist.toast.updated'|trans|json_encode|raw }},
+    toastGenerated: {{ 'checklist.toast.generated'|trans|json_encode|raw }},
+    toastError: {{ 'checklist.toast.error'|trans|json_encode|raw }},
   };
 
   const URLS = {
-    base: {{ path('user_equipment_create')|json_encode|raw }},
-    generate: {{ path('user_equipment_generate')|json_encode|raw }},
-    reorder: {{ path('user_equipment_reorder')|json_encode|raw }},
-    status: {{ path('user_equipment_status')|json_encode|raw }},
-    bulkDelete: {{ path('user_equipment_bulk_delete')|json_encode|raw }},
+    base: {{ path('user_checklist_create')|json_encode|raw }},
+    generate: {{ path('user_checklist_generate')|json_encode|raw }},
+    reorder: {{ path('user_checklist_reorder')|json_encode|raw }},
+    status: {{ path('user_checklist_status')|json_encode|raw }},
+    bulkDelete: {{ path('user_checklist_bulk_delete')|json_encode|raw }},
   };
 
   document.addEventListener('DOMContentLoaded', () => {
     const CSRF = document.getElementById('csrf-token').value;
-    const list = document.getElementById('equipment-list');
+    const list = document.getElementById('checklist-list');
     const emptyState = document.getElementById('empty-state');
     const bulkBar = document.getElementById('bulk-bar');
     const bulkCount = document.getElementById('bulk-count');
-    const form = document.getElementById('equipment-form');
-    const nameInput = document.getElementById('equipment_name');
-    const errorEl = document.getElementById('equipment-error');
-    const dialogTitle = document.getElementById('equipment-dialog-title');
-    const cancelBtn = document.getElementById('equipment-cancel');
+    const form = document.getElementById('checklist-form');
+    const nameInput = document.getElementById('checklist_name');
+    const errorEl = document.getElementById('checklist-error');
+    const dialogTitle = document.getElementById('checklist-dialog-title');
+    const cancelBtn = document.getElementById('checklist-cancel');
 
     const ICONS = {
       in_progress: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" class="size-6 text-gray-400 dark:text-gray-500"><circle cx="12" cy="12" r="9" /></svg>',
@@ -179,7 +179,7 @@
       toggle.setAttribute('title', STATUS[state].toggle);
       // Équipement terminé : texte barré et grisé
       const done = state === 'complete';
-      const name = li.querySelector('.equipment-name');
+      const name = li.querySelector('.checklist-name');
       name.classList.toggle('line-through', done);
       name.classList.toggle('text-gray-400', done);
       name.classList.toggle('dark:text-gray-500', done);
@@ -201,10 +201,10 @@
     };
 
     const selectAllBtn = document.getElementById('select-all');
-    const visibleBoxes = () => [...list.querySelectorAll('.equipment-select')].filter((cb) => !cb.closest('li').hidden);
+    const visibleBoxes = () => [...list.querySelectorAll('.checklist-select')].filter((cb) => !cb.closest('li').hidden);
 
     const refreshBulkBar = () => {
-      const count = list.querySelectorAll('.equipment-select:checked').length;
+      const count = list.querySelectorAll('.checklist-select:checked').length;
       bulkCount.textContent = count;
       bulkBar.hidden = count === 0;
       const boxes = visibleBoxes();
@@ -212,9 +212,9 @@
       selectAllBtn.textContent = allChecked ? I18N.deselectAll : I18N.selectAll;
     };
 
-    const selectedIds = () => [...list.querySelectorAll('.equipment-select:checked')].map((cb) => cb.closest('li').dataset.id);
+    const selectedIds = () => [...list.querySelectorAll('.checklist-select:checked')].map((cb) => cb.closest('li').dataset.id);
     const orderedIds = () => [...list.querySelectorAll('li')].map((li) => li.dataset.id);
-    const clearSelection = () => { list.querySelectorAll('.equipment-select:checked').forEach((cb) => { cb.checked = false; }); refreshBulkBar(); };
+    const clearSelection = () => { list.querySelectorAll('.checklist-select:checked').forEach((cb) => { cb.checked = false; }); refreshBulkBar(); };
 
     const generateBtn = document.getElementById('generate-list');
 
@@ -265,7 +265,7 @@
     });
 
     list.addEventListener('change', (e) => {
-      if (e.target.classList.contains('equipment-select')) refreshBulkBar();
+      if (e.target.classList.contains('checklist-select')) refreshBulkBar();
     });
 
     // Suppression groupée (sans confirmation)
@@ -304,9 +304,9 @@
     let editId = null;
     const resetError = () => { errorEl.hidden = true; errorEl.textContent = ''; };
     const openCreate = () => { editId = null; dialogTitle.textContent = I18N.modalCreateTitle; nameInput.value = ''; resetError(); };
-    const openEdit = (li) => { editId = li.dataset.id; dialogTitle.textContent = I18N.modalEditTitle; nameInput.value = li.querySelector('.equipment-name').textContent; resetError(); };
+    const openEdit = (li) => { editId = li.dataset.id; dialogTitle.textContent = I18N.modalEditTitle; nameInput.value = li.querySelector('.checklist-name').textContent; resetError(); };
 
-    // Soumission du formulaire Symfony (champs equipment[name] + jeton CSRF intégré)
+    // Soumission du formulaire Symfony (champs checklist[name] + jeton CSRF intégré)
     const submitForm = async () => {
       const url = editId ? URLS.base + '/' + editId : URLS.base;
       const res = await fetch(url, { method: 'POST', body: new URLSearchParams(new FormData(form)) });
@@ -338,7 +338,7 @@
       catch { toast(I18N.toastError, 'error'); }
     });
 
-    document.getElementById('create-equipment').addEventListener('click', openCreate);
+    document.getElementById('create-checklist').addEventListener('click', openCreate);
     document.getElementById('empty-create').addEventListener('click', openCreate);
 
     // Génération d'une liste prédéfinie selon la langue

@@ -8,7 +8,7 @@ password:
     mismatch: "The two passwords must match."
 email:
     required: "Please enter your email address."
-equipment:
+checklist:
     validation:
         name_required: "Please enter a name."
 battery:

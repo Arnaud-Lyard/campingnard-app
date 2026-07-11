@@ -4,8 +4,11 @@ page:
 
 nav:
     dashboard: "Dashboard"
-    equipment: "Equipment"
+    checklist: "Checklist"
+    tools: "Tools"
+    weather: "Weather"
     battery: "Battery"
+    account: "Account"
     team: "Team"
     projects: "Projects"
     calendar: "Calendar"
@@ -22,7 +25,10 @@ nav:
 
 auth:
     email_label: "Email address"
+    email_placeholder: "you@example.com"
     password_label: "Password"
+    password_placeholder: "Your password"
+    toggle_password: "Show/hide password"
     back_to_login: "Back to login"
     login:
         page_title: "Login"
@@ -38,6 +44,7 @@ auth:
         already_registered: "Already registered?"
         login_link: "Sign in"
         confirm_password_label: "Confirm password"
+        confirm_password_placeholder: "Repeat your password"
         language_label: "Language"
         agree_terms: "I agree to the terms of service"
         submit: "Sign up"
@@ -59,11 +66,13 @@ auth:
         page_title: "New password"
         heading: "Choose a new password"
         new_password_label: "New password"
+        new_password_placeholder: "Your new password"
         repeat_password_label: "Repeat password"
+        repeat_password_placeholder: "Repeat your password"
         submit: "Save"
 
-equipment:
-    title: "Equipment"
+checklist:
+    title: "Checklist"
     create: "Create"
     generate: "Generate a list"
     select_all: "Select all"
@@ -82,10 +91,10 @@ equipment:
         mark_complete: "Mark as complete"
         mark_in_progress: "Mark as in progress"
         reorder: "Reorder"
-        select: "Select equipment"
+        select: "Select item"
     modal:
-        create_title: "New equipment"
-        edit_title: "Edit equipment"
+        create_title: "New item"
+        edit_title: "Edit item"
         name_label: "Name"
         name_placeholder: "e.g. 4-person tent"
         save: "Save"
@@ -96,31 +105,31 @@ equipment:
         mark_all_in_progress: "Mark selection as in progress"
         mark_all_complete: "Mark selection as complete"
     confirm:
-        delete_title: "Delete this equipment?"
+        delete_title: "Delete this item?"
         delete_text: "This action cannot be undone."
-        delete_bulk_title: "Delete the selected equipment?"
+        delete_bulk_title: "Delete the selected items?"
         confirm: "Yes"
         cancel: "Cancel"
     toast:
         order_updated: "Order updated"
-        deleted: "Equipment deleted"
-        deleted_bulk: "Equipment deleted"
+        deleted: "Item deleted"
+        deleted_bulk: "Item deleted"
         status_changed: "Status updated"
-        created: "Equipment created"
-        updated: "Equipment updated"
+        created: "Item created"
+        updated: "Item updated"
         generated: "List generated"
         error: "Something went wrong"
     empty:
-        title: "No equipment"
-        text: "Get started by creating an equipment item."
-        cta: "New equipment"
+        title: "No items"
+        text: "Get started by creating your first item."
+        cta: "New item"
 
 battery:
     title: "Battery reminder"
     description: "Get an email reminder to recharge your caravan battery."
     form:
         active_label: "Enable reminders"
-        active_help: "Disabled by default. Once enabled, you'll receive an email at the chosen frequency."
+        active_help: "Disabled by default. Once enabled, you'll receive an email at the chosen frequency. The countdown starts from the date you save."
         frequency_label: "Frequency"
         frequency_unit: "day(s)"
         frequency_help: "Number of days between each reminder."
@@ -136,6 +145,31 @@ settings:
         save: "Save"
     flash:
         saved: "Your preferences have been saved."
+
+weather:
+    title: "Weather"
+    loading_location: "Getting your location…"
+    location_denied: "Allow location access to display weather."
+    loading_weather: "Loading weather…"
+    error: "Unable to fetch weather (network required)."
+    trend_rising: "Rising"
+    trend_falling: "Falling"
+    trend_stable: "Stable"
+    forecast: "5-day forecast"
+    sun: "Sun"
+    ensoleillement: "Sunshine"
+    moon: "Moon"
+    sunrise: "Sunrise"
+    sunset: "Sunset"
+    solar_noon: "Solar noon"
+    golden_hour: "Golden hour"
+    day_length: "Day length"
+    sunset_in: "Sunset in"
+    next_full_moon: "Next full moon"
+    wind: "Wind"
+    pressure: "Pressure"
+    today: "Today"
+    source: "Source: Open-Meteo · SunCalc"
 
 flash:
     email_verified: "Your email address has been verified. You can now log in."

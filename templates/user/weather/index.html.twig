@@ -1,0 +1,449 @@
+{% extends 'user/_layout/index.html.twig' %}
+
+{% block title %}{{ 'weather.title'|trans }}{% endblock %}
+
+{% block content %}
+<div id="weather-map-wrap" class="hidden -mx-4 sm:-mx-6 lg:-mx-8 -mt-10 h-72">
+  <div id="weather-map" class="size-full"></div>
+</div>
+
+{# ── States ─────────────────────────────────────────────────────────── #}
+<div id="state-loc-loading" class="mt-10 flex flex-col items-center gap-3 text-center">
+  <svg class="size-8 animate-spin text-indigo-600" fill="none" viewBox="0 0 24 24">
+    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+  </svg>
+  <p class="text-sm text-gray-500 dark:text-gray-400">{{ 'weather.loading_location'|trans }}</p>
+</div>
+
+<div id="state-loc-denied" class="hidden mt-10 flex flex-col items-center gap-3 text-center">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="size-10 text-gray-400">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"/>
+  </svg>
+  <p class="text-sm text-gray-500 dark:text-gray-400">{{ 'weather.location_denied'|trans }}</p>
+</div>
+
+<div id="state-weather-error" class="hidden mt-10 flex flex-col items-center gap-3 text-center">
+  <p class="text-sm text-red-600 dark:text-red-400">{{ 'weather.error'|trans }}</p>
+</div>
+
+{# ── Skeleton (shown while loading with a known position) ────────────── #}
+<div id="state-skeleton" class="hidden mt-6 space-y-4">
+  <div class="grid grid-cols-1 gap-4 lg:grid-cols-3">
+    <div class="lg:col-span-2 rounded-xl bg-white p-6 shadow-xs ring-1 ring-gray-900/5 dark:bg-white/5 dark:ring-white/10">
+      <div class="animate-pulse space-y-4">
+        <div class="h-3 w-1/3 rounded bg-gray-200 dark:bg-white/10"></div>
+        <div class="flex items-center gap-4">
+          <div class="size-14 rounded-full bg-gray-200 dark:bg-white/10"></div>
+          <div class="h-12 w-24 rounded-lg bg-gray-200 dark:bg-white/10"></div>
+        </div>
+        <div class="flex gap-6">
+          <div class="h-4 w-20 rounded bg-gray-200 dark:bg-white/10"></div>
+          <div class="h-4 w-20 rounded bg-gray-200 dark:bg-white/10"></div>
+        </div>
+      </div>
+    </div>
+    <div class="rounded-xl bg-white p-6 shadow-xs ring-1 ring-gray-900/5 dark:bg-white/5 dark:ring-white/10">
+      <div class="animate-pulse space-y-5">
+        <div class="h-3 w-2/3 rounded bg-gray-200 dark:bg-white/10"></div>
+        <div class="flex items-center gap-3">
+          <div class="size-10 rounded-full bg-gray-200 dark:bg-white/10"></div>
+          <div class="space-y-2"><div class="h-5 w-16 rounded bg-gray-200 dark:bg-white/10"></div><div class="h-3 w-12 rounded bg-gray-200 dark:bg-white/10"></div></div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="size-10 rounded-full bg-gray-200 dark:bg-white/10"></div>
+          <div class="space-y-2"><div class="h-5 w-16 rounded bg-gray-200 dark:bg-white/10"></div><div class="h-3 w-12 rounded bg-gray-200 dark:bg-white/10"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="rounded-xl bg-white p-4 shadow-xs ring-1 ring-gray-900/5 dark:bg-white/5 dark:ring-white/10">
+    <div class="animate-pulse flex gap-3 overflow-hidden">
+      {% for i in 1..10 %}
+      <div class="flex shrink-0 flex-col items-center gap-2 px-2">
+        <div class="h-3 w-10 rounded bg-gray-200 dark:bg-white/10"></div>
+        <div class="size-8 rounded-full bg-gray-200 dark:bg-white/10"></div>
+        <div class="h-4 w-8 rounded bg-gray-200 dark:bg-white/10"></div>
+        <div class="h-3 w-6 rounded bg-gray-200 dark:bg-white/10"></div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="rounded-xl bg-white p-6 shadow-xs ring-1 ring-gray-900/5 dark:bg-white/5 dark:ring-white/10">
+    <div class="animate-pulse">
+      <div class="h-3 w-1/4 rounded bg-gray-200 dark:bg-white/10 mb-5"></div>
+      <div class="grid grid-cols-5 divide-x divide-gray-100 dark:divide-white/10">
+        {% for i in 1..5 %}
+        <div class="flex flex-col items-center gap-3 px-2 py-1">
+          <div class="h-3 w-10 rounded bg-gray-200 dark:bg-white/10"></div>
+          <div class="size-8 rounded-full bg-gray-200 dark:bg-white/10"></div>
+          <div class="h-4 w-8 rounded bg-gray-200 dark:bg-white/10"></div>
+          <div class="h-3 w-6 rounded bg-gray-200 dark:bg-white/10"></div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{# ── Main content ────────────────────────────────────────────────────── #}
+<div id="weather-content" class="hidden mt-6 space-y-4">
+
+  {# Row 1: Current conditions + Ensoleillement #}
+  <div class="grid grid-cols-1 gap-4 lg:grid-cols-3">
+
+    {# Current conditions – 2/3 width #}
+    <div class="lg:col-span-2 rounded-xl bg-white p-6 shadow-xs ring-1 ring-gray-900/5 dark:bg-white/5 dark:ring-white/10">
+      <p id="cur-location" class="mb-4 text-sm text-gray-500 dark:text-gray-400"></p>
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <span id="cur-emoji" class="text-6xl leading-none select-none"></span>
+          <p id="cur-temp" class="text-5xl font-bold text-gray-900 dark:text-white"></p>
+        </div>
+        <div class="flex flex-col items-end gap-3 text-sm">
+          <div class="flex items-center gap-2 text-gray-700 dark:text-gray-300">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="size-4 text-gray-400 dark:text-gray-500">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 9h11a4 4 0 0 1 0 8h-1m0-11a3 3 0 0 1 0 6H3m0 3h9"/>
+            </svg>
+            <div class="text-right">
+              <p id="cur-wind" class="font-medium"></p>
+              <p class="text-xs text-gray-400 dark:text-gray-500">{{ 'weather.wind'|trans }}</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 text-gray-700 dark:text-gray-300">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="size-4 text-gray-400 dark:text-gray-500">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 17a8 8 0 1 1 16 0"/>
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 17 L16 11"/>
+              <circle cx="12" cy="17" r="1.5" fill="currentColor" stroke="none"/>
+            </svg>
+            <div class="text-right">
+              <p class="font-medium"><span id="cur-pressure"></span> <span id="cur-trend" class="text-xs font-semibold"></span></p>
+              <p class="text-xs text-gray-400 dark:text-gray-500">{{ 'weather.pressure'|trans }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {# Ensoleillement card – 1/3 width #}
+    <div class="rounded-xl bg-white p-6 shadow-xs ring-1 ring-gray-900/5 dark:bg-white/5 dark:ring-white/10">
+      <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500">{{ 'weather.ensoleillement'|trans }}</p>
+      <div class="mt-5 space-y-4">
+        <div class="flex items-center gap-3">
+          <div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-amber-50 dark:bg-amber-900/20">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="size-5 text-amber-500">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"/>
+            </svg>
+          </div>
+          <div>
+            <p id="sun-sunrise" class="text-lg font-semibold text-gray-900 dark:text-white"></p>
+            <p class="text-xs text-gray-400 dark:text-gray-500">{{ 'weather.sunrise'|trans }}</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-amber-50 dark:bg-amber-900/20">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="size-5 text-amber-500">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"/>
+            </svg>
+          </div>
+          <div>
+            <p id="sun-sunset" class="text-lg font-semibold text-gray-900 dark:text-white"></p>
+            <p class="text-xs text-gray-400 dark:text-gray-500">{{ 'weather.sunset'|trans }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# Hourly detail strip – horizontal scroll #}
+  <div class="rounded-xl bg-white shadow-xs ring-1 ring-gray-900/5 dark:bg-white/5 dark:ring-white/10 overflow-hidden">
+    <div class="px-4 pt-4 pb-1">
+      <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500">{{ 'weather.today'|trans }}</p>
+    </div>
+    <div id="hourly-scroll" class="flex gap-1 overflow-x-auto scroll-smooth px-3 pb-4 pt-2" style="scrollbar-width:none;-webkit-overflow-scrolling:touch;"></div>
+  </div>
+
+  {# 5-day forecast #}
+  <div class="rounded-xl bg-white p-6 shadow-xs ring-1 ring-gray-900/5 dark:bg-white/5 dark:ring-white/10">
+    <p class="mb-5 text-xs font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500">{{ 'weather.forecast'|trans }}</p>
+    <div id="forecast-grid" class="grid grid-cols-5 divide-x divide-gray-100 dark:divide-white/10"></div>
+  </div>
+
+  <p class="text-center text-xs text-gray-400 dark:text-gray-600">{{ 'weather.source'|trans }}</p>
+
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/suncalc@1/suncalc.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const locale = {{ app.request.locale|json_encode|raw }};
+  const CACHE_KEY = 'cg-weather-pos';
+
+  /* ── i18n strings ── */
+  const T = {
+    fr: {
+      wmo: { 0:'Ciel dégagé',1:'Principalement dégagé',2:'Partiellement nuageux',3:'Couvert',45:'Brouillard',48:'Brouillard givrant',51:'Bruine légère',53:'Bruine modérée',55:'Bruine dense',61:'Pluie légère',63:'Pluie modérée',65:'Pluie forte',71:'Neige légère',73:'Neige modérée',75:'Neige forte',77:'Flocons',80:'Averses légères',81:'Averses',82:'Averses violentes',95:'Orage',96:'Orage avec grêle',99:'Orage fort avec grêle' },
+      wind: (v) => `${Math.round(v)} km/h`,
+      pressure: (p) => `${Math.round(p)} hPa`,
+      trend: { up:'▲ {{ "weather.trend_rising"|trans }}', down:'▼ {{ "weather.trend_falling"|trans }}', stable:'' },
+      today: '{{ "weather.today"|trans }}',
+      now: 'Maint.',
+    },
+    en: {
+      wmo: { 0:'Clear sky',1:'Mainly clear',2:'Partly cloudy',3:'Overcast',45:'Fog',48:'Rime fog',51:'Light drizzle',53:'Moderate drizzle',55:'Dense drizzle',61:'Light rain',63:'Moderate rain',65:'Heavy rain',71:'Light snow',73:'Moderate snow',75:'Heavy snow',77:'Snow grains',80:'Light showers',81:'Moderate showers',82:'Violent showers',95:'Thunderstorm',96:'Thunderstorm with hail',99:'Heavy thunderstorm with hail' },
+      wind: (v) => `${Math.round(v)} km/h`,
+      pressure: (p) => `${Math.round(p)} hPa`,
+      trend: { up:'▲ {{ "weather.trend_rising"|trans }}', down:'▼ {{ "weather.trend_falling"|trans }}', stable:'' },
+      today: '{{ "weather.today"|trans }}',
+      now: 'Now',
+    },
+  };
+  const t = T[locale] || T.fr;
+
+  /* ── WMO emoji ── */
+  const WMO_EMOJI = {0:'☀️',1:'🌤️',2:'⛅',3:'☁️',45:'🌫️',48:'🌫️',51:'🌦️',53:'🌦️',55:'🌦️',61:'🌧️',63:'🌧️',65:'🌧️',71:'❄️',73:'❄️',75:'❄️',77:'❄️',80:'🌦️',81:'🌦️',82:'🌦️',85:'🌨️',86:'🌨️',95:'⛈️',96:'⛈️',99:'⛈️'};
+
+  /* ── DOM helpers ── */
+  const $ = (id) => document.getElementById(id);
+  const show = (id) => $(id) && $(id).classList.remove('hidden');
+  const hide = (id) => $(id) && $(id).classList.add('hidden');
+
+  const ALL_STATES = ['state-loc-loading','state-loc-denied','state-weather-error','state-skeleton','weather-content'];
+  function setState(s) {
+    ALL_STATES.forEach(hide);
+    show(s);
+  }
+
+  function fmtTime(d) {
+    if (!d || isNaN(d)) return '—';
+    return d.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' });
+  }
+
+  function fmtShortDay(iso) {
+    const s = new Date(iso + 'T00:00:00').toLocaleDateString(locale, { weekday: 'short' });
+    return s.charAt(0).toUpperCase() + s.slice(1).replace(/\.$/, '');
+  }
+
+  /* ── Leaflet map ── */
+  let leafletMap = null;
+  function initMap(lat, lon) {
+    if (leafletMap) { leafletMap.setView([lat, lon], 14); return; }
+    leafletMap = L.map('weather-map', { zoomControl: true, attributionControl: true }).setView([lat, lon], 14);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' }).addTo(leafletMap);
+    const icon = L.divIcon({ html: '<div style="width:18px;height:18px;border-radius:50%;background:#4f46e5;border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.4)"></div>', iconSize: [18, 18], iconAnchor: [9, 9], className: '' });
+    L.marker([lat, lon], { icon }).addTo(leafletMap);
+    L.circle([lat, lon], { radius: 40, color: '#4f46e5', fillColor: '#4f46e5', fillOpacity: 0.12, weight: 1 }).addTo(leafletMap);
+  }
+
+  /* ── Nominatim reverse geocoding ── */
+  async function fetchLocation(lat, lon) {
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&addressdetails=1`,
+        { headers: { 'Accept-Language': locale } }
+      );
+      const data = await res.json();
+      const a = data?.address;
+      return a?.town ?? a?.village ?? a?.municipality ?? a?.city ?? a?.county ?? null;
+    } catch { return null; }
+  }
+
+  /* ── Sun / Moon (SunCalc) ── */
+  function renderSunMoon(lat, lon) {
+    const now = new Date();
+    const sun = SunCalc.getTimes(now, lat, lon);
+    $('sun-sunrise').textContent = fmtTime(sun.sunrise);
+    $('sun-sunset').textContent = fmtTime(sun.sunset);
+  }
+
+  /* ── Open-Meteo fetch ── */
+  const pad = (n) => String(n).padStart(2, '0');
+  const localHourKey = (d) => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:00`;
+  const localDateKey = (d) => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+
+  async function fetchWeather(lat, lon) {
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}`
+      + `&current=temperature_2m,wind_speed_10m,wind_direction_10m,weather_code`
+      + `&hourly=surface_pressure,temperature_2m,precipitation_probability,weather_code`
+      + `&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,weather_code`
+      + `&past_days=1&forecast_days=6&timezone=auto`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    return res.json();
+  }
+
+  /* ── Render hourly strip (full day, scrollable both ways) ── */
+  function renderHourly(json) {
+    const now = new Date();
+    const todayDate = localDateKey(now);
+    const curKey = localHourKey(now);
+    const times = json.hourly.time;
+    const temps = json.hourly.temperature_2m;
+    const probs = json.hourly.precipitation_probability;
+    const codes = json.hourly.weather_code;
+
+    const strip = $('hourly-scroll');
+    strip.innerHTML = '';
+
+    // Show all 24 h of today so the user can scroll left (past) and right (future)
+    const dayStart = times.findIndex(t => t.startsWith(todayDate));
+    if (dayStart < 0) return;
+
+    let curEl = null;
+    for (let i = dayStart; i < times.length; i++) {
+      const timeStr = times[i];
+      if (!timeStr.startsWith(todayDate)) break; // stop at midnight
+
+      const isNow = timeStr === curKey;
+      const isPast = timeStr < curKey;
+      const hourLabel = timeStr.substring(11, 16);
+      const temp = temps[i] ?? null;
+      const prob = probs[i] ?? 0;
+      const code = codes[i] ?? 0;
+      if (temp === null) continue;
+
+      const hasRain = prob > 20;
+      const col = document.createElement('div');
+      col.className = 'flex shrink-0 flex-col items-center gap-1.5 rounded-xl px-3 py-2.5 '
+        + (isNow
+          ? 'bg-indigo-50 ring-1 ring-inset ring-indigo-200 dark:bg-indigo-500/15 dark:ring-indigo-500/25'
+          : isPast
+            ? 'opacity-40'
+            : 'hover:bg-gray-50 dark:hover:bg-white/5');
+      col.innerHTML = `
+        <span class="text-xs font-medium ${isNow ? 'text-indigo-600 dark:text-indigo-400' : 'text-gray-500 dark:text-gray-400'}">${isNow ? t.now : hourLabel}</span>
+        <span class="text-xl leading-none select-none">${WMO_EMOJI[code] || '🌡️'}</span>
+        <span class="text-sm font-semibold ${isNow ? 'text-indigo-700 dark:text-indigo-300' : 'text-gray-900 dark:text-white'}">${Math.round(temp)}°</span>
+        <span class="text-xs font-medium ${hasRain ? 'text-blue-500 dark:text-blue-400' : 'text-gray-300 dark:text-gray-600'}">${prob}%</span>`;
+      strip.appendChild(col);
+      if (isNow) curEl = col;
+    }
+
+    // Scroll so the current hour is centred in the strip
+    requestAnimationFrame(() => {
+      if (!curEl) return;
+      const target = curEl.offsetLeft - strip.clientWidth / 2 + curEl.offsetWidth / 2;
+      strip.scrollLeft = Math.max(0, target);
+    });
+  }
+
+  /* ── Render weather content ── */
+  function renderWeather(json, locationName) {
+    const now = new Date();
+
+    // Current conditions
+    const cur = json.current;
+    $('cur-emoji').textContent = WMO_EMOJI[cur.weather_code] || '🌡️';
+    $('cur-temp').textContent = `${Math.round(cur.temperature_2m)}°C`;
+    const desc = t.wmo[cur.weather_code] || '';
+    $('cur-location').textContent = locationName ? `${desc} · ${locationName}` : desc;
+    $('cur-wind').textContent = t.wind(cur.wind_speed_10m);
+
+    // Pressure + trend
+    const htimes = json.hourly.time, vals = json.hourly.surface_pressure;
+    let idx = htimes.indexOf(localHourKey(now));
+    if (idx < 0) idx = vals.reduce((last, v, i) => typeof v === 'number' ? i : last, -1);
+    const pressure = vals[idx] || 0;
+    const past = vals[idx - 3];
+    const delta = typeof past === 'number' ? pressure - past : 0;
+    $('cur-pressure').textContent = t.pressure(pressure);
+    const trendEl = $('cur-trend');
+    if (delta > 0.5) { trendEl.textContent = t.trend.up; trendEl.className = 'text-xs font-semibold text-indigo-600 dark:text-indigo-400'; }
+    else if (delta < -0.5) { trendEl.textContent = t.trend.down; trendEl.className = 'text-xs font-semibold text-red-500 dark:text-red-400'; }
+    else { trendEl.textContent = ''; }
+
+    // Hourly strip
+    renderHourly(json);
+
+    // Forecast: today + 4 days (5 total)
+    const days = json.daily.time, maxT = json.daily.temperature_2m_max, minT = json.daily.temperature_2m_min;
+    const codes = json.daily.weather_code;
+    let todayIdx = days.indexOf(localDateKey(now));
+    if (todayIdx < 0) todayIdx = 1;
+    const grid = $('forecast-grid');
+    grid.innerHTML = '';
+    for (let i = todayIdx; i < days.length && i <= todayIdx + 4; i++) {
+      const dayName = i === todayIdx ? t.today : fmtShortDay(days[i]);
+      const col = document.createElement('div');
+      col.className = 'flex flex-col items-center gap-2 px-2 py-1';
+      col.innerHTML = `
+        <span class="text-xs font-medium text-gray-500 dark:text-gray-400">${dayName}</span>
+        <span class="text-2xl leading-none select-none">${WMO_EMOJI[codes[i]] || '🌡️'}</span>
+        <span class="text-sm font-semibold text-gray-900 dark:text-white">${Math.round(maxT[i])}°</span>
+        <span class="text-xs text-gray-400 dark:text-gray-500">${Math.round(minT[i])}°</span>`;
+      grid.appendChild(col);
+    }
+  }
+
+  /* ── Load weather (with position) ── */
+  let isLoading = false;
+  async function loadWeather(lat, lon) {
+    if (isLoading) return;
+    isLoading = true;
+    setState('state-skeleton');
+    show('weather-map-wrap');
+    requestAnimationFrame(() => initMap(lat, lon));
+    try { renderSunMoon(lat, lon); } catch (e) { console.warn('sun/moon:', e); }
+    try {
+      const [weatherResult, locationResult] = await Promise.allSettled([
+        fetchWeather(lat, lon),
+        fetchLocation(lat, lon),
+      ]);
+      if (weatherResult.status === 'fulfilled') {
+        renderWeather(weatherResult.value, locationResult.status === 'fulfilled' ? locationResult.value : null);
+        setState('weather-content');
+      } else {
+        setState('state-weather-error');
+      }
+    } catch (e) {
+      console.error('weather:', e);
+      setState('state-weather-error');
+    } finally {
+      isLoading = false;
+    }
+  }
+
+  /* ── Entry point with localStorage cache ── */
+  function start() {
+    const raw = localStorage.getItem(CACHE_KEY);
+    const cached = raw ? JSON.parse(raw) : null;
+
+    if (cached) {
+      // Use cached position immediately — no spinner
+      loadWeather(cached.lat, cached.lon);
+    } else {
+      setState('state-loc-loading');
+    }
+
+    if (!navigator.geolocation) {
+      if (!cached) setState('state-loc-denied');
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude: lat, longitude: lon } = pos.coords;
+        const prev = cached;
+        localStorage.setItem(CACHE_KEY, JSON.stringify({ lat, lon }));
+        if (!prev) {
+          loadWeather(lat, lon);
+        } else if (!isLoading && (Math.abs(lat - prev.lat) > 0.01 || Math.abs(lon - prev.lon) > 0.01)) {
+          // Significant position change — reload silently
+          loadWeather(lat, lon);
+        }
+      },
+      () => { if (!cached) setState('state-loc-denied'); },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  }
+
+  start();
+});
+</script>
+{% endblock %}

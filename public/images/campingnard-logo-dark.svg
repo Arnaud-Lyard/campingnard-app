@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="680" height="200" viewBox="0 0 680 200" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>Campingnard</title>
+<desc>Logo Campingnard — version fond sombre</desc>
+<circle cx="28" cy="22" r="2.5" fill="#fbbf24"/>
+<circle cx="52" cy="10" r="2" fill="#fbbf24" opacity=".8"/>
+<circle cx="110" cy="14" r="2" fill="#fbbf24" opacity=".85"/>
+<circle cx="145" cy="22" r="2.5" fill="#fbbf24" opacity=".75"/>
+<circle cx="168" cy="44" r="1.5" fill="#fbbf24" opacity=".6"/>
+<polygon points="18,155 90,18 90,155" fill="#22c55e"/>
+<polygon points="90,18 162,155 90,155" fill="#4ade80"/>
+<line x1="90" y1="18" x2="90" y2="155" stroke="#14532d" stroke-width="1.5"/>
+<path d="M76 155 Q90 95 104 155Z" fill="#052e16"/>
+<line x1="73" y1="162" x2="107" y2="172" stroke="#92400e" stroke-width="5" stroke-linecap="round"/>
+<line x1="73" y1="172" x2="107" y2="162" stroke="#92400e" stroke-width="5" stroke-linecap="round"/>
+<path d="M90 168 Q82 156 87 148 Q90 143 93 148 Q98 156 90 168Z" fill="#f59e0b"/>
+<path d="M90 166 Q86 158 88 153 Q90 150 92 153 Q94 158 90 166Z" fill="#fef3c7"/>
+<line x1="178" y1="42" x2="178" y2="162" stroke="#374151" stroke-width="1"/>
+<text x="194" y="120" font-family="system-ui,-apple-system,sans-serif" font-size="62" font-weight="500"><tspan fill="#4ade80">Camping</tspan><tspan fill="#fbbf24">nard</tspan></text>
+<text x="195" y="148" font-family="system-ui,-apple-system,sans-serif" font-size="14" fill="#6b7280">Votre compagnon de camping</text>
+</svg>

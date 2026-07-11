@@ -10,8 +10,8 @@
       <div class="flex items-center gap-x-4 lg:flex-1">
         <a href="#" class="-m-1.5 p-1.5">
           <span class="sr-only">Your Company</span>
-          <img src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600" alt="" class="h-8 w-auto dark:hidden" />
-          <img src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500" alt="" class="h-8 w-auto not-dark:hidden" />
+          <img src="{{ asset('images/campingnard-logo-light.svg') }}" alt="Campingnard" class="h-10 w-auto dark:hidden">
+          <img src="{{ asset('images/campingnard-logo-dark.svg') }}" alt="Campingnard" class="h-10 w-auto not-dark:hidden">
         </a>
         {{ include('pages/_partials/_language_switcher.html.twig') }}
       </div>
@@ -31,7 +31,7 @@
       </div>
       <div class="hidden lg:flex lg:flex-1 lg:justify-end">
         {% if app.user %}
-          <a href="{{ path('user_equipment_index') }}" class="text-sm/6 font-semibold text-gray-900 dark:text-white">{{ 'nav.dashboard'|trans }} <span aria-hidden="true">&rarr;</span></a>
+          <a href="{{ path('user_checklist_index') }}" class="text-sm/6 font-semibold text-gray-900 dark:text-white">{{ 'nav.dashboard'|trans }} <span aria-hidden="true">&rarr;</span></a>
         {% else %}
           <a href="{{ path('app_login') }}" class="text-sm/6 font-semibold text-gray-900 dark:text-white">{{ 'nav.login'|trans }} <span aria-hidden="true">&rarr;</span></a>
         {% endif %}
@@ -44,8 +44,8 @@
             <div class="flex items-center justify-between">
               <a href="#" class="-m-1.5 p-1.5">
                 <span class="sr-only">Your Company</span>
-                <img src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600" alt="" class="h-8 w-auto dark:hidden" />
-                <img src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500" alt="" class="h-8 w-auto not-dark:hidden" />
+                <img src="{{ asset('images/campingnard-logo-light.svg') }}" alt="Campingnard" class="h-10 w-auto dark:hidden">
+                <img src="{{ asset('images/campingnard-logo-dark.svg') }}" alt="Campingnard" class="h-10 w-auto not-dark:hidden">
               </a>
               <button type="button" command="close" commandfor="mobile-menu" class="-m-2.5 rounded-md p-2.5 text-gray-700 dark:text-gray-200">
                 <span class="sr-only">Close menu</span>
@@ -64,7 +64,7 @@
                 </div>
                 <div class="py-6">
                   {% if app.user %}
-                    <a href="{{ path('user_equipment_index') }}" class="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50 dark:text-white dark:hover:bg-white/5">{{ 'nav.dashboard'|trans }}</a>
+                    <a href="{{ path('user_checklist_index') }}" class="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50 dark:text-white dark:hover:bg-white/5">{{ 'nav.dashboard'|trans }}</a>
                   {% else %}
                     <a href="{{ path('app_login') }}" class="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50 dark:text-white dark:hover:bg-white/5">{{ 'nav.login'|trans }}</a>
                   {% endif %}
@@ -458,8 +458,8 @@
   <footer class="mt-32 sm:mt-56">
     <div class="mx-auto max-w-7xl border-t border-gray-200 px-6 pt-16 pb-8 sm:pt-24 lg:px-8 lg:pt-32 dark:border-white/10">
       <div class="xl:grid xl:grid-cols-3 xl:gap-8">
-        <img src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600" alt="Company name" class="h-9 dark:hidden" />
-        <img src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=500" alt="Company name" class="h-9 not-dark:hidden" />
+        <img src="{{ asset('images/campingnard-logo-light.svg') }}" alt="Campingnard" class="h-9 w-auto dark:hidden">
+        <img src="{{ asset('images/campingnard-logo-dark.svg') }}" alt="Campingnard" class="h-9 w-auto not-dark:hidden">
         <div class="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
           <div class="md:grid md:grid-cols-2 md:gap-8">
             <div>

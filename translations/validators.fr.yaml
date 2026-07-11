@@ -8,7 +8,7 @@ password:
     mismatch: "Les deux mots de passe doivent être identiques."
 email:
     required: "Veuillez saisir votre adresse e-mail."
-equipment:
+checklist:
     validation:
         name_required: "Veuillez saisir un nom."
 battery:

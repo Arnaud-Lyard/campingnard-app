@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Domain\Equipment\Entity;
+namespace App\Domain\Checklist\Entity;
 
 use App\Domain\Auth\Entity\User;
-use App\Domain\Equipment\Enum\EquipmentStatus;
-use App\Domain\Equipment\Repository\EquipmentRepository;
+use App\Domain\Checklist\Enum\ChecklistStatus;
+use App\Domain\Checklist\Repository\ChecklistRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: EquipmentRepository::class)]
-class Equipment
+#[ORM\Entity(repositoryClass: ChecklistRepository::class)]
+class Checklist
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -21,8 +21,8 @@ class Equipment
     #[ORM\Column(nullable: true)]
     private ?int $ordre = null;
 
-    #[ORM\Column(enumType: EquipmentStatus::class)]
-    private ?EquipmentStatus $status = null;
+    #[ORM\Column(enumType: ChecklistStatus::class)]
+    private ?ChecklistStatus $status = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
@@ -30,7 +30,7 @@ class Equipment
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'equipment')]
+    #[ORM\ManyToOne(inversedBy: 'checklists')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $owner = null;
 
@@ -63,12 +63,12 @@ class Equipment
         return $this;
     }
 
-    public function getStatus(): ?EquipmentStatus
+    public function getStatus(): ?ChecklistStatus
     {
         return $this->status;
     }
 
-    public function setStatus(EquipmentStatus $status): static
+    public function setStatus(ChecklistStatus $status): static
     {
         $this->status = $status;
 

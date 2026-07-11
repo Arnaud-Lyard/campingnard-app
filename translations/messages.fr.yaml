@@ -4,8 +4,11 @@ page:
 
 nav:
     dashboard: "Tableau de bord"
-    equipment: "Équipements"
+    checklist: "Checklist"
+    tools: "Outils"
+    weather: "Météo"
     battery: "Batterie"
+    account: "Compte"
     team: "Équipe"
     projects: "Projets"
     calendar: "Calendrier"
@@ -22,7 +25,10 @@ nav:
 
 auth:
     email_label: "Adresse e-mail"
+    email_placeholder: "vous@exemple.fr"
     password_label: "Mot de passe"
+    password_placeholder: "Votre mot de passe"
+    toggle_password: "Afficher/masquer le mot de passe"
     back_to_login: "Retour à la connexion"
     login:
         page_title: "Connexion"
@@ -38,6 +44,7 @@ auth:
         already_registered: "Déjà inscrit ?"
         login_link: "Connectez-vous"
         confirm_password_label: "Confirmez le mot de passe"
+        confirm_password_placeholder: "Répétez votre mot de passe"
         language_label: "Langue"
         agree_terms: "J'accepte les conditions d'utilisation"
         submit: "S'inscrire"
@@ -59,11 +66,13 @@ auth:
         page_title: "Nouveau mot de passe"
         heading: "Choisissez un nouveau mot de passe"
         new_password_label: "Nouveau mot de passe"
+        new_password_placeholder: "Votre nouveau mot de passe"
         repeat_password_label: "Répétez le mot de passe"
+        repeat_password_placeholder: "Répétez votre mot de passe"
         submit: "Enregistrer"
 
-equipment:
-    title: "Équipements"
+checklist:
+    title: "Checklist"
     create: "Créer"
     generate: "Générer une liste"
     select_all: "Tout sélectionner"
@@ -82,10 +91,10 @@ equipment:
         mark_complete: "Marquer comme terminé"
         mark_in_progress: "Marquer comme en cours"
         reorder: "Réorganiser"
-        select: "Sélectionner l'équipement"
+        select: "Sélectionner l'élément"
     modal:
-        create_title: "Nouvel équipement"
-        edit_title: "Modifier l'équipement"
+        create_title: "Nouvel élément"
+        edit_title: "Modifier l'élément"
         name_label: "Nom"
         name_placeholder: "Ex. : Tente 4 places"
         save: "Enregistrer"
@@ -96,31 +105,31 @@ equipment:
         mark_all_in_progress: "Marquer la sélection en cours"
         mark_all_complete: "Marquer la sélection terminée"
     confirm:
-        delete_title: "Supprimer cet équipement ?"
+        delete_title: "Supprimer cet élément ?"
         delete_text: "Cette action est irréversible."
-        delete_bulk_title: "Supprimer les équipements sélectionnés ?"
+        delete_bulk_title: "Supprimer les éléments sélectionnés ?"
         confirm: "Oui"
         cancel: "Annuler"
     toast:
         order_updated: "Ordre mis à jour"
-        deleted: "Équipement supprimé"
-        deleted_bulk: "Équipements supprimés"
+        deleted: "Élément supprimé"
+        deleted_bulk: "Éléments supprimés"
         status_changed: "Statut mis à jour"
-        created: "Équipement créé"
-        updated: "Équipement mis à jour"
+        created: "Élément créé"
+        updated: "Élément mis à jour"
         generated: "Liste générée"
         error: "Une erreur est survenue"
     empty:
-        title: "Aucun équipement"
-        text: "Commencez par créer un équipement."
-        cta: "Nouvel équipement"
+        title: "Aucun élément"
+        text: "Commencez par créer votre premier élément."
+        cta: "Nouvel élément"
 
 battery:
     title: "Rappel de batterie"
     description: "Recevez un rappel par e-mail pour penser à recharger la batterie de votre caravane."
     form:
         active_label: "Activer les rappels"
-        active_help: "Désactivé par défaut. Une fois activé, vous recevrez un e-mail selon la fréquence choisie."
+        active_help: "Désactivé par défaut. Une fois activé, vous recevrez un e-mail selon la fréquence choisie. Le compteur démarre à la date d'enregistrement de vos préférences."
         frequency_label: "Fréquence"
         frequency_unit: "jour(s)"
         frequency_help: "Nombre de jours entre chaque rappel."
@@ -136,6 +145,31 @@ settings:
         save: "Enregistrer"
     flash:
         saved: "Vos préférences ont été enregistrées."
+
+weather:
+    title: "Météo"
+    loading_location: "Localisation en cours…"
+    location_denied: "Autorisez la localisation pour afficher la météo."
+    loading_weather: "Chargement de la météo…"
+    error: "Impossible de récupérer la météo (réseau requis)."
+    trend_rising: "En hausse"
+    trend_falling: "En baisse"
+    trend_stable: "Stable"
+    forecast: "Prévisions sur 5 jours"
+    sun: "Soleil"
+    ensoleillement: "Ensoleillement"
+    moon: "Lune"
+    sunrise: "Lever du soleil"
+    sunset: "Coucher du soleil"
+    solar_noon: "Midi solaire"
+    golden_hour: "Heure dorée"
+    day_length: "Durée du jour"
+    sunset_in: "Coucher dans"
+    next_full_moon: "Prochaine pleine lune"
+    wind: "Vent"
+    pressure: "Pression"
+    today: "Aujourd'hui"
+    source: "Source : Open-Meteo · SunCalc"
 
 flash:
     email_verified: "Votre adresse e-mail a été vérifiée. Vous pouvez maintenant vous connecter."

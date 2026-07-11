@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Domain\Equipment\Form;
+namespace App\Domain\Checklist\Form;
 
-use App\Domain\Equipment\Entity\Equipment;
+use App\Domain\Checklist\Entity\Checklist;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -10,16 +10,16 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class EquipmentType extends AbstractType
+class ChecklistType extends AbstractType
 {
     public function buildForm(
         FormBuilderInterface $builder,
         array $options,
     ): void {
         $builder->add("name", TextType::class, [
-            "label" => "equipment.modal.name_label",
+            "label" => "checklist.modal.name_label",
             "constraints" => [
-                new NotBlank(message: "equipment.validation.name_required"),
+                new NotBlank(message: "checklist.validation.name_required"),
                 new Length(max: 510),
             ],
         ]);
@@ -28,10 +28,8 @@ class EquipmentType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            "data_class" => Equipment::class,
-            // Stateful CSRF id (not in framework stateless_token_ids) so the
-            // token validates reliably when the modal is submitted via fetch.
-            "csrf_token_id" => "equipment_form",
+            "data_class" => Checklist::class,
+            "csrf_token_id" => "checklist_form",
         ]);
     }
 }

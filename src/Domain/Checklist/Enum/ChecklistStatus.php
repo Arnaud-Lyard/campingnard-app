@@ -1,15 +1,12 @@
 <?php
 
-namespace App\Domain\Equipment\Enum;
+namespace App\Domain\Checklist\Enum;
 
-enum EquipmentStatus: string
+enum ChecklistStatus: string
 {
     case InProgress = "In progress";
     case Completed = "Completed";
 
-    /**
-     * Front-facing key used by the template/JS (data-status, filters, toggle).
-     */
     public function key(): string
     {
         return match ($this) {
@@ -23,7 +20,7 @@ enum EquipmentStatus: string
         return match ($key) {
             "in_progress" => self::InProgress,
             "complete" => self::Completed,
-            default => throw new \ValueError(sprintf('Unknown equipment status key "%s".', $key)),
+            default => throw new \ValueError(sprintf('Unknown checklist status key "%s".', $key)),
         };
     }
 }

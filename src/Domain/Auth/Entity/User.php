@@ -3,7 +3,7 @@
 namespace App\Domain\Auth\Entity;
 
 use App\Domain\Auth\Repository\UserRepository;
-use App\Domain\Equipment\Entity\Equipment;
+use App\Domain\Checklist\Entity\Checklist;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -51,14 +51,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private string $locale = "fr";
 
     /**
-     * @var Collection<int, Equipment>
+     * @var Collection<int, Checklist>
      */
-    #[ORM\OneToMany(targetEntity: Equipment::class, mappedBy: "owner")]
-    private Collection $equipment;
+    #[ORM\OneToMany(targetEntity: Checklist::class, mappedBy: "owner")]
+    private Collection $checklists;
 
     public function __construct()
     {
-        $this->equipment = new ArrayCollection();
+        $this->checklists = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -170,29 +170,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<int, Equipment>
+     * @return Collection<int, Checklist>
      */
-    public function getEquipment(): Collection
+    public function getChecklists(): Collection
     {
-        return $this->equipment;
+        return $this->checklists;
     }
 
-    public function addEquipment(Equipment $equipment): static
+    public function addChecklist(Checklist $checklist): static
     {
-        if (!$this->equipment->contains($equipment)) {
-            $this->equipment->add($equipment);
-            $equipment->setOwner($this);
+        if (!$this->checklists->contains($checklist)) {
+            $this->checklists->add($checklist);
+            $checklist->setOwner($this);
         }
 
         return $this;
     }
 
-    public function removeEquipment(Equipment $equipment): static
+    public function removeChecklist(Checklist $checklist): static
     {
-        if ($this->equipment->removeElement($equipment)) {
-            // set the owning side to null (unless already changed)
-            if ($equipment->getOwner() === $this) {
-                $equipment->setOwner(null);
+        if ($this->checklists->removeElement($checklist)) {
+            if ($checklist->getOwner() === $this) {
+                $checklist->setOwner(null);
             }
         }
 

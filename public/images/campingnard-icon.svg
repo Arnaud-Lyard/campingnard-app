@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1024" height="1024" viewBox="0 0 200 200" role="img" xmlns="http://www.w3.org/2000/svg">
+<title>Campingnard icon</title>
+<!-- Background -->
+<rect width="200" height="200" fill="#185d34"/>
+<g transform="translate(10, 7)">
+<!-- Stars -->
+<circle cx="28" cy="22" r="2.5" fill="#fbbf24"/>
+<circle cx="52" cy="10" r="2" fill="#fbbf24" opacity=".8"/>
+<circle cx="110" cy="14" r="2" fill="#fbbf24" opacity=".85"/>
+<circle cx="145" cy="22" r="2.5" fill="#fbbf24" opacity=".75"/>
+<circle cx="168" cy="44" r="1.5" fill="#fbbf24" opacity=".6"/>
+<!-- Tent -->
+<polygon points="18,155 90,18 90,155" fill="#22753e"/>
+<polygon points="90,18 162,155 90,155" fill="#2d9e59"/>
+<line x1="90" y1="18" x2="90" y2="155" stroke="#0d3320" stroke-width="1.5"/>
+<path d="M76 155 Q90 95 104 155Z" fill="#0a2218"/>
+<!-- Log / wood crossfire -->
+<line x1="73" y1="162" x2="107" y2="172" stroke="#7c4a1e" stroke-width="5" stroke-linecap="round"/>
+<line x1="73" y1="172" x2="107" y2="162" stroke="#7c4a1e" stroke-width="5" stroke-linecap="round"/>
+<!-- Flame -->
+<path d="M90 168 Q82 156 87 148 Q90 143 93 148 Q98 156 90 168Z" fill="#f59e0b"/>
+<path d="M90 166 Q86 158 88 153 Q90 150 92 153 Q94 158 90 166Z" fill="#fef3c7"/>
+</g>
+</svg>
