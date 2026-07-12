@@ -16,7 +16,7 @@
         {{ include('pages/_partials/_language_switcher.html.twig') }}
       </div>
       <div class="flex lg:hidden">
-        <button type="button" command="show-modal" commandfor="mobile-menu" class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700 dark:text-gray-200">
+        <button type="button" data-open="mobile-menu" class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700 dark:text-gray-200">
           <span class="sr-only">Open main menu</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6">
             <path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" stroke-linecap="round" stroke-linejoin="round" />
@@ -37,17 +37,14 @@
         {% endif %}
       </div>
     </nav>
-    <el-dialog>
-      <dialog id="mobile-menu" class="backdrop:bg-transparent lg:hidden">
-        <div tabindex="0" class="fixed inset-0 focus:outline-none">
-          <el-dialog-panel class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white p-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10 dark:bg-gray-900 dark:sm:ring-gray-100/10">
+    <dialog id="mobile-menu" class="backdrop:bg-transparent lg:hidden overflow-y-auto bg-white p-6 sm:ring-1 sm:ring-gray-900/10 dark:bg-gray-900 dark:sm:ring-gray-100/10" style="position:fixed;inset:0 0 0 auto;width:100%;max-width:24rem;height:100%;max-height:100%;margin:0;border:0">
             <div class="flex items-center justify-between">
               <a href="#" class="-m-1.5 p-1.5">
                 <span class="sr-only">Your Company</span>
                 <img src="{{ asset('images/campingnard-logo-light.svg') }}" alt="Campingnard" class="h-10 w-auto dark:hidden">
                 <img src="{{ asset('images/campingnard-logo-dark.svg') }}" alt="Campingnard" class="h-10 w-auto not-dark:hidden">
               </a>
-              <button type="button" command="close" commandfor="mobile-menu" class="-m-2.5 rounded-md p-2.5 text-gray-700 dark:text-gray-200">
+              <button type="button" data-close="mobile-menu" class="-m-2.5 rounded-md p-2.5 text-gray-700 dark:text-gray-200">
                 <span class="sr-only">Close menu</span>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" data-slot="icon" aria-hidden="true" class="size-6">
                   <path d="M6 18 18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
@@ -71,16 +68,22 @@
                 </div>
               </div>
             </div>
-          </el-dialog-panel>
-        </div>
-      </dialog>
-    </el-dialog>
+    </dialog>
   </header>
 
   <main>
+    <!-- Flash messages -->
+    {% for label, messages in app.flashes(['success', 'error', 'info']) %}
+      {% for message in messages %}
+      <div class="fixed top-4 right-4 z-50 flex items-center gap-x-3 rounded-xl px-5 py-3 text-sm font-semibold shadow-lg ring-1 {{ label == 'success' ? 'bg-green-50 text-green-800 ring-green-200 dark:bg-green-900/20 dark:text-green-300 dark:ring-green-800' : label == 'error' ? 'bg-red-50 text-red-800 ring-red-200 dark:bg-red-900/20 dark:text-red-300 dark:ring-red-800' : 'bg-blue-50 text-blue-800 ring-blue-200 dark:bg-blue-900/20 dark:text-blue-300 dark:ring-blue-800' }}">
+        {{ message }}
+      </div>
+      {% endfor %}
+    {% endfor %}
+
     <!-- Hero section -->
     <div class="relative isolate pt-14">
-      <svg aria-hidden="true" class="absolute inset-0 -z-10 size-full mask-[radial-gradient(100%_100%_at_top_right,white,transparent)] stroke-gray-200 dark:stroke-white/10">
+      <svg aria-hidden="true" class="absolute inset-0 -z-10 size-full stroke-gray-200 dark:stroke-white/10" style="mask-image: radial-gradient(100% 100% at top right, white, transparent)">
         <defs>
           <pattern id="83fd4e5a-9d52-42fc-97b6-718e5d7ee527" width="200" height="200" x="50%" y="-1" patternUnits="userSpaceOnUse">
             <path d="M100 200V.5M.5 .5H200" fill="none" />
@@ -278,7 +281,7 @@
 
     <!-- Testimonials section -->
     <div class="relative isolate mt-32 sm:mt-56 sm:pt-32">
-      <svg aria-hidden="true" class="absolute inset-0 -z-10 hidden size-full mask-[radial-gradient(64rem_64rem_at_top,white,transparent)] stroke-gray-200 sm:block dark:stroke-white/10">
+      <svg aria-hidden="true" class="absolute inset-0 -z-10 hidden size-full stroke-gray-200 sm:block dark:stroke-white/10" style="mask-image: radial-gradient(64rem 64rem at top, white, transparent)">
         <defs>
           <pattern id="55d3d46d-692e-45f2-becd-d8bdc9344f45" width="200" height="200" x="50%" y="0" patternUnits="userSpaceOnUse">
             <path d="M.5 200V.5H200" fill="none" />
@@ -298,160 +301,285 @@
         </div>
         <div class="mx-auto max-w-7xl px-6 lg:px-8">
           <div class="mx-auto max-w-2xl text-center">
-            <h2 class="text-base/7 font-semibold text-indigo-600 dark:text-indigo-400">Testimonials</h2>
-            <p class="mt-2 text-4xl font-semibold tracking-tight text-balance text-gray-900 sm:text-5xl dark:text-white">We have worked with thousands of amazing people</p>
+            <h2 class="text-base/7 font-semibold text-indigo-600 dark:text-indigo-400">Avis</h2>
+            <button type="button" data-open="testimonial-modal" class="rounded-full bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:shadow-none dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500">Déposer mon avis</button>
+            <p class="mt-2 text-4xl font-semibold tracking-tight text-balance text-gray-900 sm:text-5xl dark:text-white">Ce que disent nos utilisateurs</p>
           </div>
+          {% if testimonials is not empty %}
           <div class="mx-auto mt-16 grid max-w-2xl grid-cols-1 grid-rows-1 gap-8 text-sm/6 text-gray-900 sm:mt-20 sm:grid-cols-2 xl:mx-0 xl:max-w-none xl:grid-flow-col xl:grid-cols-4 dark:text-gray-100">
+            {# Grande carte centrale : avis le plus récent #}
             <figure class="rounded-2xl bg-white shadow-lg ring-1 ring-gray-900/5 sm:col-span-2 xl:col-start-2 xl:row-end-1 dark:bg-gray-800/75 dark:shadow-none dark:ring-white/10">
               <blockquote class="p-6 text-lg font-semibold tracking-tight text-gray-900 sm:p-12 sm:text-xl/8 dark:text-white">
-                <p>“Integer id nunc sit semper purus. Bibendum at lacus ut arcu blandit montes vitae auctor libero. Hac condimentum dignissim nibh vulputate ut nunc. Amet nibh orci mi venenatis blandit vel et proin. Non hendrerit in vel ac diam.”</p>
+                <p>"{{ testimonials[0].comment }}"</p>
               </blockquote>
               <figcaption class="flex flex-wrap items-center gap-x-4 gap-y-4 border-t border-gray-900/10 px-6 py-4 sm:flex-nowrap dark:border-white/10">
-                <img src="https://images.unsplash.com/photo-1550525811-e5869dd03032?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=1024&h=1024&q=80" alt="" class="size-10 flex-none rounded-full bg-gray-50 dark:bg-gray-700" />
                 <div class="flex-auto">
-                  <div class="font-semibold text-gray-900 dark:text-white">Brenna Goyette</div>
-                  <div class="text-gray-600 dark:text-gray-400">@brennagoyette</div>
+                  <div class="font-semibold text-gray-900 dark:text-white">{{ testimonials[0].name }}</div>
+                  <div class="flex gap-x-1 text-indigo-600 dark:text-indigo-400" aria-label="Note : {{ testimonials[0].rating }} sur 5">
+                    {% for i in 1..5 %}
+                    <svg class="size-5 flex-none{{ i > testimonials[0].rating ? ' opacity-25' : '' }}" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                      <path d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.01L10 15.591l4.069 2.474c.713.446 1.598-.197 1.404-1.01l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401Z" clip-rule="evenodd" fill-rule="evenodd" />
+                    </svg>
+                    {% endfor %}
+                  </div>
                 </div>
-                <img src="https://tailwindcss.com/plus-assets/img/logos/savvycal-logo-gray-900.svg" alt="" class="h-10 w-auto flex-none dark:hidden" />
-                <img src="https://tailwindcss.com/plus-assets/img/logos/savvycal-logo-gray-100.svg" alt="" class="h-10 w-auto flex-none not-dark:hidden" />
               </figcaption>
             </figure>
+            {# Colonne gauche : indices 1-5 #}
             <div class="space-y-8 xl:contents xl:space-y-0">
               <div class="space-y-8 xl:row-span-2">
+                {% for idx in 1..3 %}{% if testimonials[idx] is defined %}
                 <figure class="rounded-2xl bg-white p-6 shadow-lg ring-1 ring-gray-900/5 dark:bg-gray-800/75 dark:shadow-none dark:ring-white/10">
                   <blockquote class="text-gray-900 dark:text-white">
-                    <p>“Laborum quis quam. Dolorum et ut quod quia. Voluptas numquam delectus nihil. Aut enim doloremque et ipsam.”</p>
+                    <p>"{{ testimonials[idx].comment }}"</p>
                   </blockquote>
                   <figcaption class="mt-6 flex items-center gap-x-4">
-                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" class="size-10 rounded-full bg-gray-50 dark:bg-gray-700" />
                     <div>
-                      <div class="font-semibold text-gray-900 dark:text-white">Leslie Alexander</div>
-                      <div class="text-gray-600 dark:text-gray-400">@lesliealexander</div>
+                      <div class="font-semibold text-gray-900 dark:text-white">{{ testimonials[idx].name }}</div>
+                      <div class="flex gap-x-1 text-indigo-600 dark:text-indigo-400" aria-label="Note : {{ testimonials[idx].rating }} sur 5">
+                        {% for i in 1..5 %}<svg class="size-4 flex-none{{ i > testimonials[idx].rating ? ' opacity-25' : '' }}" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.01L10 15.591l4.069 2.474c.713.446 1.598-.197 1.404-1.01l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401Z" clip-rule="evenodd" fill-rule="evenodd" /></svg>{% endfor %}
+                      </div>
                     </div>
                   </figcaption>
                 </figure>
-                <figure class="rounded-2xl bg-white p-6 shadow-lg ring-1 ring-gray-900/5 dark:bg-gray-800/75 dark:shadow-none dark:ring-white/10">
-                  <blockquote class="text-gray-900 dark:text-white">
-                    <p>“Quia dolorem qui et. Atque quo aliquid sit eos officia. Dolores similique laboriosam quaerat cupiditate.”</p>
-                  </blockquote>
-                  <figcaption class="mt-6 flex items-center gap-x-4">
-                    <img src="https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" class="size-10 rounded-full bg-gray-50 dark:bg-gray-700" />
-                    <div>
-                      <div class="font-semibold text-gray-900 dark:text-white">Michael Foster</div>
-                      <div class="text-gray-600 dark:text-gray-400">@michaelfoster</div>
-                    </div>
-                  </figcaption>
-                </figure>
-                <figure class="rounded-2xl bg-white p-6 shadow-lg ring-1 ring-gray-900/5 dark:bg-gray-800/75 dark:shadow-none dark:ring-white/10">
-                  <blockquote class="text-gray-900 dark:text-white">
-                    <p>“Consequatur ut atque. Itaque nostrum molestiae id veniam eos cumque. Ut quia eum fugit laborum autem inventore ut voluptate.”</p>
-                  </blockquote>
-                  <figcaption class="mt-6 flex items-center gap-x-4">
-                    <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" class="size-10 rounded-full bg-gray-50 dark:bg-gray-700" />
-                    <div>
-                      <div class="font-semibold text-gray-900 dark:text-white">Dries Vincent</div>
-                      <div class="text-gray-600 dark:text-gray-400">@driesvincent</div>
-                    </div>
-                  </figcaption>
-                </figure>
+                {% endif %}{% endfor %}
               </div>
               <div class="space-y-8 xl:row-start-1">
+                {% for idx in 4..5 %}{% if testimonials[idx] is defined %}
                 <figure class="rounded-2xl bg-white p-6 shadow-lg ring-1 ring-gray-900/5 dark:bg-gray-800/75 dark:shadow-none dark:ring-white/10">
                   <blockquote class="text-gray-900 dark:text-white">
-                    <p>“Aut reprehenderit voluptatem eum asperiores beatae id. Iure molestiae ipsam ut officia rem nulla blanditiis.”</p>
+                    <p>"{{ testimonials[idx].comment }}"</p>
                   </blockquote>
                   <figcaption class="mt-6 flex items-center gap-x-4">
-                    <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" class="size-10 rounded-full bg-gray-50 dark:bg-gray-700" />
                     <div>
-                      <div class="font-semibold text-gray-900 dark:text-white">Lindsay Walton</div>
-                      <div class="text-gray-600 dark:text-gray-400">@lindsaywalton</div>
+                      <div class="font-semibold text-gray-900 dark:text-white">{{ testimonials[idx].name }}</div>
+                      <div class="flex gap-x-1 text-indigo-600 dark:text-indigo-400" aria-label="Note : {{ testimonials[idx].rating }} sur 5">
+                        {% for i in 1..5 %}<svg class="size-4 flex-none{{ i > testimonials[idx].rating ? ' opacity-25' : '' }}" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.01L10 15.591l4.069 2.474c.713.446 1.598-.197 1.404-1.01l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401Z" clip-rule="evenodd" fill-rule="evenodd" /></svg>{% endfor %}
+                      </div>
                     </div>
                   </figcaption>
                 </figure>
-                <figure class="rounded-2xl bg-white p-6 shadow-lg ring-1 ring-gray-900/5 dark:bg-gray-800/75 dark:shadow-none dark:ring-white/10">
-                  <blockquote class="text-gray-900 dark:text-white">
-                    <p>“Nam nesciunt dolorem dolor asperiores cum. Incidunt molestiae quis deleniti vitae ut in earum delectus iusto.”</p>
-                  </blockquote>
-                  <figcaption class="mt-6 flex items-center gap-x-4">
-                    <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" class="size-10 rounded-full bg-gray-50 dark:bg-gray-700" />
-                    <div>
-                      <div class="font-semibold text-gray-900 dark:text-white">Courtney Henry</div>
-                      <div class="text-gray-600 dark:text-gray-400">@courtneyhenry</div>
-                    </div>
-                  </figcaption>
-                </figure>
+                {% endif %}{% endfor %}
               </div>
             </div>
+            {# Colonne droite : indices 6-10 #}
             <div class="space-y-8 xl:contents xl:space-y-0">
               <div class="space-y-8 xl:row-start-1">
+                {% for idx in 6..7 %}{% if testimonials[idx] is defined %}
                 <figure class="rounded-2xl bg-white p-6 shadow-lg ring-1 ring-gray-900/5 dark:bg-gray-800/75 dark:shadow-none dark:ring-white/10">
                   <blockquote class="text-gray-900 dark:text-white">
-                    <p>“Voluptas quos itaque ipsam in voluptatem est. Iste eos blanditiis repudiandae. Earum deserunt enim molestiae ipsum perferendis recusandae saepe corrupti.”</p>
+                    <p>"{{ testimonials[idx].comment }}"</p>
                   </blockquote>
                   <figcaption class="mt-6 flex items-center gap-x-4">
-                    <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" class="size-10 rounded-full bg-gray-50 dark:bg-gray-700" />
                     <div>
-                      <div class="font-semibold text-gray-900 dark:text-white">Tom Cook</div>
-                      <div class="text-gray-600 dark:text-gray-400">@tomcook</div>
+                      <div class="font-semibold text-gray-900 dark:text-white">{{ testimonials[idx].name }}</div>
+                      <div class="flex gap-x-1 text-indigo-600 dark:text-indigo-400" aria-label="Note : {{ testimonials[idx].rating }} sur 5">
+                        {% for i in 1..5 %}<svg class="size-4 flex-none{{ i > testimonials[idx].rating ? ' opacity-25' : '' }}" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.01L10 15.591l4.069 2.474c.713.446 1.598-.197 1.404-1.01l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401Z" clip-rule="evenodd" fill-rule="evenodd" /></svg>{% endfor %}
+                      </div>
                     </div>
                   </figcaption>
                 </figure>
-                <figure class="rounded-2xl bg-white p-6 shadow-lg ring-1 ring-gray-900/5 dark:bg-gray-800/75 dark:shadow-none dark:ring-white/10">
-                  <blockquote class="text-gray-900 dark:text-white">
-                    <p>“Aliquid dolore praesentium ratione. Cumque ea officia repellendus laboriosam. Vitae quod id explicabo non sunt.”</p>
-                  </blockquote>
-                  <figcaption class="mt-6 flex items-center gap-x-4">
-                    <img src="https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" class="size-10 rounded-full bg-gray-50 dark:bg-gray-700" />
-                    <div>
-                      <div class="font-semibold text-gray-900 dark:text-white">Whitney Francis</div>
-                      <div class="text-gray-600 dark:text-gray-400">@whitneyfrancis</div>
-                    </div>
-                  </figcaption>
-                </figure>
+                {% endif %}{% endfor %}
               </div>
               <div class="space-y-8 xl:row-span-2">
+                {% for idx in 8..10 %}{% if testimonials[idx] is defined %}
                 <figure class="rounded-2xl bg-white p-6 shadow-lg ring-1 ring-gray-900/5 dark:bg-gray-800/75 dark:shadow-none dark:ring-white/10">
                   <blockquote class="text-gray-900 dark:text-white">
-                    <p>“Molestias ea earum quos nostrum doloremque sed. Quaerat quasi aut velit incidunt excepturi rerum voluptatem minus harum.”</p>
+                    <p>"{{ testimonials[idx].comment }}"</p>
                   </blockquote>
                   <figcaption class="mt-6 flex items-center gap-x-4">
-                    <img src="https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" class="size-10 rounded-full bg-gray-50 dark:bg-gray-700" />
                     <div>
-                      <div class="font-semibold text-gray-900 dark:text-white">Leonard Krasner</div>
-                      <div class="text-gray-600 dark:text-gray-400">@leonardkrasner</div>
+                      <div class="font-semibold text-gray-900 dark:text-white">{{ testimonials[idx].name }}</div>
+                      <div class="flex gap-x-1 text-indigo-600 dark:text-indigo-400" aria-label="Note : {{ testimonials[idx].rating }} sur 5">
+                        {% for i in 1..5 %}<svg class="size-4 flex-none{{ i > testimonials[idx].rating ? ' opacity-25' : '' }}" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.01L10 15.591l4.069 2.474c.713.446 1.598-.197 1.404-1.01l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401Z" clip-rule="evenodd" fill-rule="evenodd" /></svg>{% endfor %}
+                      </div>
                     </div>
                   </figcaption>
                 </figure>
-                <figure class="rounded-2xl bg-white p-6 shadow-lg ring-1 ring-gray-900/5 dark:bg-gray-800/75 dark:shadow-none dark:ring-white/10">
-                  <blockquote class="text-gray-900 dark:text-white">
-                    <p>“Architecto libero natus est. Est quam debitis officia enim atque et ut non. Sunt reiciendis quasi eaque. Itaque error ut et.”</p>
-                  </blockquote>
-                  <figcaption class="mt-6 flex items-center gap-x-4">
-                    <img src="https://images.unsplash.com/photo-1463453091185-61582044d556?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" class="size-10 rounded-full bg-gray-50 dark:bg-gray-700" />
-                    <div>
-                      <div class="font-semibold text-gray-900 dark:text-white">Floyd Miles</div>
-                      <div class="text-gray-600 dark:text-gray-400">@floydmiles</div>
-                    </div>
-                  </figcaption>
-                </figure>
-                <figure class="rounded-2xl bg-white p-6 shadow-lg ring-1 ring-gray-900/5 dark:bg-gray-800/75 dark:shadow-none dark:ring-white/10">
-                  <blockquote class="text-gray-900 dark:text-white">
-                    <p>“Temporibus ea molestiae impedit adipisci perspiciatis illo aliquid. Quis ut ratione et voluptatem et. Nostrum explicabo iste unde beatae.”</p>
-                  </blockquote>
-                  <figcaption class="mt-6 flex items-center gap-x-4">
-                    <img src="https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="" class="size-10 rounded-full bg-gray-50 dark:bg-gray-700" />
-                    <div>
-                      <div class="font-semibold text-gray-900 dark:text-white">Emily Selman</div>
-                      <div class="text-gray-600 dark:text-gray-400">@emilyselman</div>
-                    </div>
-                  </figcaption>
-                </figure>
+                {% endif %}{% endfor %}
               </div>
             </div>
           </div>
+          {% else %}
+          <p class="mt-16 text-center text-gray-500 dark:text-gray-400">Soyez le premier à laisser un avis !</p>
+          {% endif %}
         </div>
       </div>
     </div>
+
+    <!-- Testimonial modal -->
+    <dialog id="testimonial-modal" class="m-auto w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl bg-white p-8 shadow-2xl backdrop:bg-black/50 dark:bg-gray-900 dark:ring-1 dark:ring-white/10">
+          <div class="flex items-center justify-between mb-6">
+              <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Laisser un avis</h3>
+              <button type="button" data-close="testimonial-modal" class="rounded-md p-1.5 text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
+                <span class="sr-only">Fermer</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" class="size-5">
+                  <path d="M6 18 18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+            </div>
+            <div id="testimonial-form-wrap">
+              <form id="testimonial-form" action="{{ path('testimonial_submit') }}" method="post" novalidate>
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('testimonial_submit') }}" />
+                <div class="space-y-5">
+                  <div>
+                    <label for="t-name" class="block text-sm/6 font-medium text-gray-900 dark:text-white">Votre nom <span class="text-red-500" aria-hidden="true">*</span></label>
+                    <input type="text" id="t-name" name="name" required maxlength="255" autocomplete="name"
+                      class="mt-1.5 block w-full rounded-md border-0 px-3 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:ring-white/10 dark:focus:ring-indigo-500" />
+                  </div>
+                  <div>
+                    <label for="t-email" class="block text-sm/6 font-medium text-gray-900 dark:text-white">Votre email <span class="text-red-500" aria-hidden="true">*</span></label>
+                    <input type="email" id="t-email" name="email" required autocomplete="email"
+                      class="mt-1.5 block w-full rounded-md border-0 px-3 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:ring-white/10 dark:focus:ring-indigo-500" />
+                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Utilisé uniquement pour confirmer votre avis, non affiché publiquement.</p>
+                  </div>
+                  <div>
+                    <label class="block text-sm/6 font-medium text-gray-900 dark:text-white">Note <span class="text-red-500" aria-hidden="true">*</span></label>
+                    <div class="mt-1.5 flex gap-x-1" id="star-rating-input" role="group" aria-label="Sélectionnez une note de 1 à 5">
+                      {% for i in 1..5 %}
+                      <button type="button" data-value="{{ i }}" aria-label="{{ i }} étoile{{ i > 1 ? 's' : '' }}" class="star-input-btn text-gray-300 hover:text-indigo-600 dark:text-gray-600 transition-colors">
+                        <svg class="size-8" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                          <path d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.01L10 15.591l4.069 2.474c.713.446 1.598-.197 1.404-1.01l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401Z" clip-rule="evenodd" fill-rule="evenodd" />
+                        </svg>
+                      </button>
+                      {% endfor %}
+                    </div>
+                    <input type="hidden" name="rating" id="t-rating" value="0" />
+                  </div>
+                  <div>
+                    <label for="t-comment" class="block text-sm/6 font-medium text-gray-900 dark:text-white">Votre avis <span class="text-red-500" aria-hidden="true">*</span></label>
+                    <textarea id="t-comment" name="comment" required rows="4" maxlength="2000"
+                      class="mt-1.5 block w-full rounded-md border-0 px-3 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:ring-white/10 dark:focus:ring-indigo-500"></textarea>
+                  </div>
+                </div>
+                <div id="testimonial-error" class="mt-4 hidden rounded-md bg-red-50 p-3 text-sm text-red-700 dark:bg-red-900/20 dark:text-red-400" role="alert"></div>
+                <div class="mt-6 flex items-center justify-end gap-x-3">
+                  <button type="button" data-close="testimonial-modal" class="text-sm/6 font-semibold text-gray-900 dark:text-white">Annuler</button>
+                  <button type="submit" id="testimonial-submit-btn" class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:opacity-60 dark:bg-indigo-500 dark:hover:bg-indigo-400">
+                    Envoyer
+                  </button>
+                </div>
+              </form>
+            </div>
+            <div id="testimonial-success" class="hidden py-8 text-center">
+              <svg class="mx-auto mb-4 size-12 text-indigo-600 dark:text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                <path d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <p class="text-base font-semibold text-gray-900 dark:text-white">Merci pour votre avis !</p>
+              <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Un email de confirmation vous a été envoyé. Cliquez sur le lien dans l'email pour publier votre avis.</p>
+              <button type="button" data-close="testimonial-modal" class="mt-6 rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500 dark:bg-indigo-500 dark:hover:bg-indigo-400">Fermer</button>
+            </div>
+    </dialog>
+
+    <script>
+    (function () {
+      var stars = document.querySelectorAll('.star-input-btn');
+      var ratingInput = document.getElementById('t-rating');
+      var form = document.getElementById('testimonial-form');
+      var submitBtn = document.getElementById('testimonial-submit-btn');
+      var errorDiv = document.getElementById('testimonial-error');
+      var formWrap = document.getElementById('testimonial-form-wrap');
+      var successDiv = document.getElementById('testimonial-success');
+
+      if (!form) return;
+
+      function setStars(value) {
+        stars.forEach(function (btn) {
+          var v = parseInt(btn.dataset.value, 10);
+          btn.classList.toggle('text-indigo-600', v <= value);
+          btn.classList.toggle('dark:text-indigo-400', v <= value);
+          btn.classList.toggle('text-gray-300', v > value);
+          btn.classList.toggle('dark:text-gray-600', v > value);
+        });
+        ratingInput.value = value;
+      }
+
+      function resetModal() {
+        form.reset();
+        setStars(0);
+        errorDiv.classList.add('hidden');
+        formWrap.classList.remove('hidden');
+        successDiv.classList.add('hidden');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Envoyer';
+      }
+
+      stars.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          setStars(parseInt(btn.dataset.value, 10));
+        });
+        btn.addEventListener('mouseenter', function () {
+          var hv = parseInt(btn.dataset.value, 10);
+          stars.forEach(function (b) {
+            var v = parseInt(b.dataset.value, 10);
+            b.classList.toggle('text-indigo-600', v <= hv);
+            b.classList.toggle('text-gray-300', v > hv);
+          });
+        });
+      });
+
+      document.getElementById('star-rating-input').addEventListener('mouseleave', function () {
+        setStars(parseInt(ratingInput.value, 10));
+      });
+
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        var rating = parseInt(ratingInput.value, 10);
+        if (rating < 1 || rating > 5) {
+          errorDiv.textContent = 'Veuillez sélectionner une note.';
+          errorDiv.classList.remove('hidden');
+          return;
+        }
+        errorDiv.classList.add('hidden');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Envoi…';
+        try {
+          var res = await fetch(form.action, {
+            method: 'POST',
+            body: new FormData(form),
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+          });
+          var data = await res.json();
+          if (data.success) {
+            formWrap.classList.add('hidden');
+            successDiv.classList.remove('hidden');
+          } else {
+            errorDiv.textContent = data.error || 'Une erreur est survenue.';
+            errorDiv.classList.remove('hidden');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Envoyer';
+          }
+        } catch (err) {
+          errorDiv.textContent = 'Une erreur est survenue. Veuillez réessayer.';
+          errorDiv.classList.remove('hidden');
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Envoyer';
+        }
+      });
+
+      document.addEventListener('DOMContentLoaded', function () {
+        var testimonialDialog = document.getElementById('testimonial-modal');
+        if (testimonialDialog) {
+          testimonialDialog.addEventListener('close', resetModal);
+          testimonialDialog.addEventListener('click', function(e) {
+            if (e.target === testimonialDialog) testimonialDialog.close();
+          });
+        }
+        document.querySelectorAll('[data-open]').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            var target = document.getElementById(btn.getAttribute('data-open'));
+            if (target) target.showModal();
+          });
+        });
+        document.querySelectorAll('[data-close]').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            var target = document.getElementById(btn.getAttribute('data-close'));
+            if (target) target.close();
+          });
+        });
+      });
+    })();
+    </script>
   </main>
 
   <!-- Footer -->

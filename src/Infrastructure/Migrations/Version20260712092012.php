@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20260627055226 extends AbstractMigration
+final class Version20260712092012 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,16 +20,12 @@ final class Version20260627055226 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE equipment ADD owner_id INT NOT NULL');
-        $this->addSql('ALTER TABLE equipment ADD CONSTRAINT FK_D338D5837E3C61F9 FOREIGN KEY (owner_id) REFERENCES "user" (id) NOT DEFERRABLE');
-        $this->addSql('CREATE INDEX IDX_D338D5837E3C61F9 ON equipment (owner_id)');
+        $this->addSql('CREATE UNIQUE INDEX UNIQ_TESTIMONIAL_EMAIL ON testimonial (email)');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE equipment DROP CONSTRAINT FK_D338D5837E3C61F9');
-        $this->addSql('DROP INDEX IDX_D338D5837E3C61F9');
-        $this->addSql('ALTER TABLE equipment DROP owner_id');
+        $this->addSql('DROP INDEX UNIQ_TESTIMONIAL_EMAIL');
     }
 }

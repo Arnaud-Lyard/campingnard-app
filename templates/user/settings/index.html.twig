@@ -21,6 +21,87 @@
   {{ form_end(form) }}
 </div>
 
+{# Zone dangereuse #}
+<div class="mt-16 border-t border-red-200 pt-10 dark:border-red-900/30">
+  <h3 class="text-base font-semibold text-red-600 dark:text-red-400">Zone dangereuse</h3>
+  <p class="mt-2 max-w-2xl text-sm text-gray-500 dark:text-gray-400">
+    La suppression de votre compte est irréversible. Toutes vos données seront définitivement effacées&nbsp;: listes de contrôle, équipements, et toutes les informations associées.
+  </p>
+  <div class="mt-6">
+    <button type="button" data-open="delete-account-modal"
+      class="inline-flex items-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-red-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">
+      Supprimer mon compte
+    </button>
+  </div>
+</div>
+
+{# Modale de confirmation de suppression #}
+<dialog id="delete-account-modal" class="m-auto w-full max-w-md rounded-2xl bg-white p-8 shadow-2xl backdrop:bg-black/50 dark:bg-gray-900 dark:ring-1 dark:ring-white/10">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Supprimer mon compte</h3>
+          <button type="button" data-close="delete-account-modal"
+            class="rounded-md p-1.5 text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
+            <span class="sr-only">Fermer</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" class="size-5">
+              <path d="M6 18 18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="rounded-md bg-red-50 p-4 mb-6 dark:bg-red-900/20">
+          <div class="flex gap-x-3">
+            <svg class="size-5 flex-none text-red-500 mt-0.5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495ZM10 5a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 10 5Zm0 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd" />
+            </svg>
+            <p class="text-sm text-red-700 dark:text-red-400">
+              Cette action est <strong>irréversible</strong>. Votre compte, vos listes de contrôle et vos équipements seront définitivement supprimés.
+            </p>
+          </div>
+        </div>
+
+        <form action="{{ path('user_delete_account') }}" method="post">
+          <input type="hidden" name="_csrf_token" value="{{ csrf_token('delete_account') }}">
+          <div>
+            <label for="delete-password" class="block text-sm/6 font-medium text-gray-900 dark:text-white">
+              Confirmez avec votre mot de passe
+            </label>
+            <input type="password" id="delete-password" name="password" required autocomplete="current-password"
+              class="mt-1.5 block w-full rounded-md border-0 px-3 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-red-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:ring-white/10 dark:focus:ring-red-500" />
+          </div>
+          <div class="mt-6 flex items-center justify-end gap-x-3">
+            <button type="button" data-close="delete-account-modal"
+              class="text-sm/6 font-semibold text-gray-900 dark:text-white">Annuler</button>
+            <button type="submit"
+              class="inline-flex items-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-red-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">
+              Supprimer définitivement
+            </button>
+          </div>
+        </form>
+</dialog>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('[data-open]').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var target = document.getElementById(btn.getAttribute('data-open'));
+      if (target) target.showModal();
+    });
+  });
+  document.querySelectorAll('[data-close]').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var target = document.getElementById(btn.getAttribute('data-close'));
+      if (target) target.close();
+    });
+  });
+  var deleteModal = document.getElementById('delete-account-modal');
+  if (deleteModal) {
+    deleteModal.addEventListener('click', function(e) {
+      if (e.target === deleteModal) deleteModal.close();
+    });
+  }
+});
+</script>
+
 {% endblock %}
 
 {% block javascripts %}
