@@ -2,26 +2,30 @@
 
 namespace App\Http\Public\Controller;
 
+use App\Domain\Auth\Repository\UserRepository;
 use App\Domain\Testimonial\Entity\Testimonial;
 use App\Domain\Testimonial\Repository\TestimonialRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Exception\UniqueConstraintViolationException;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use App\Domain\Testimonial\Event\TestimonialCreatedEvent;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 final class TestimonialController extends AbstractController
 {
+    public function __construct(
+        private readonly EventDispatcherInterface $dispatcher,
+        private readonly TestimonialRepository $testimonialRepository,
+        private readonly UserRepository $userRepository,
+    ) {}
+
     #[Route("/testimonial/submit", name: "testimonial_submit", methods: ["POST"])]
     public function submit(
         Request $request,
-        TestimonialRepository $repository,
         EntityManagerInterface $em,
         MailerInterface $mailer,
     ): JsonResponse {
@@ -45,8 +49,16 @@ final class TestimonialController extends AbstractController
             return new JsonResponse(["success" => false, "error" => "Données invalides."], 400);
         }
 
-        if ($repository->findOneBy(["email" => $recipientEmail])) {
+        if ($this->testimonialRepository->findOneBy(["email" => $recipientEmail])) {
             return new JsonResponse(["success" => false, "error" => "Un avis a déjà été soumis avec cette adresse e-mail."], 409);
+        }
+
+        $user = $this->userRepository->findOneBy(["email" => $recipientEmail]);
+        if ($user === null) {
+            return new JsonResponse(["success" => false, "error" => "Aucun utilisateur trouvé avec cette adresse e-mail."], 404);
+        }
+        if ($user->isVerified() === false) {
+            return new JsonResponse(["success" => false, "error" => "Votre compte n'est pas vérifié."], 403);
         }
 
         $token = bin2hex(random_bytes(32));
@@ -63,23 +75,9 @@ final class TestimonialController extends AbstractController
         $em->persist($testimonial);
         $em->flush();
 
-        $confirmUrl = $this->generateUrl(
-            "testimonial_confirm",
-            ["token" => $token, "_locale" => "fr"],
-            UrlGeneratorInterface::ABSOLUTE_URL,
+        $this->dispatcher->dispatch(
+            new TestimonialCreatedEvent($testimonial, $token, $user, $name)
         );
-
-        $message = (new TemplatedEmail())
-            ->from(new Address("mailer@camping.fr", "Campingnard"))
-            ->to($recipientEmail)
-            ->subject("Confirmez votre avis")
-            ->htmlTemplate("testimonial/confirmation_email.html.twig")
-            ->context([
-                "name" => $name,
-                "confirmUrl" => $confirmUrl,
-            ]);
-
-        $mailer->send($message);
 
         return new JsonResponse(["success" => true]);
     }
