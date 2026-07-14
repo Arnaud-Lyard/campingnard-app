@@ -5,7 +5,7 @@
 <div class="grid grid-cols-1">
     <select aria-label="{{ 'nav.language'|trans }}"
             onchange="window.location.href = this.value"
-            class="col-start-1 row-start-1 appearance-none rounded-md border border-gray-300 bg-white py-1 pr-8 pl-3 text-sm text-gray-900 shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:border-white/10 dark:bg-gray-800 dark:text-white dark:*:bg-gray-800">
+            class="col-start-1 row-start-1 appearance-none rounded-md border border-gray-300 bg-white py-1 pr-8 pl-3 text-sm text-gray-900 shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 dark:border-white/10 dark:bg-gray-800 dark:text-white dark:*:bg-gray-800">
         {% for locale in ['fr', 'en'] %}
             <option value="{{ path(route, params|merge({_locale: locale})) }}" {{ locale == current ? 'selected' : '' }}>
                 {{ labels[locale] }}

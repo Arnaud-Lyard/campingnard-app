@@ -11,12 +11,12 @@
   {{ form_start(form) }}
     <div>
       {{ form_label(form.locale, null, {'label_attr': {'class': 'block text-sm/6 font-medium text-gray-900 dark:text-white'}}) }}
-      {{ form_widget(form.locale, {'attr': {'class': 'mt-2 block w-full max-w-xs rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10'}}) }}
+      {{ form_widget(form.locale, {'attr': {'class': 'mt-2 block w-full max-w-xs rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-green-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10'}}) }}
       {{ form_errors(form.locale) }}
     </div>
 
     <div class="mt-6">
-      <button type="submit" class="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400">{{ 'settings.form.save'|trans }}</button>
+      <button type="submit" class="inline-flex items-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-green-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 dark:bg-green-500 dark:hover:bg-green-400">{{ 'settings.form.save'|trans }}</button>
     </div>
   {{ form_end(form) }}
 </div>
