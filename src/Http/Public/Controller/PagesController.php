@@ -8,11 +8,15 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class PagesController extends AbstractController
 {
-    #[Route("/test", name: "test")]
-    public function index(): Response
+    #[Route("/politique-de-confidentialite", name: "privacy_policy")]
+    public function privacy(): Response
     {
-        return $this->render("pages/index.html.twig", [
-            "controller_name" => "PagesController",
-        ]);
+        return $this->render("pages/privacy.html.twig");
+    }
+
+    #[Route("/mentions-legales", name: "legal_mentions")]
+    public function legal(): Response
+    {
+        return $this->render("pages/legal.html.twig");
     }
 }

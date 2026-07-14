@@ -1,0 +1,115 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mentions légales — Campingnard{% endblock %}
+
+{% block body %}
+<div class="bg-white dark:bg-gray-900">
+  <header class="absolute inset-x-0 top-0 z-50">
+    <nav aria-label="Global" class="flex items-center justify-between p-6 lg:px-8">
+      <div class="flex items-center gap-x-4 lg:flex-1">
+        <a href="{{ path('home') }}" class="-m-1.5 p-1.5">
+          <span class="sr-only">Campingnard</span>
+          <img src="{{ asset('images/campingnard-logo-light.svg') }}" alt="Campingnard" class="h-10 w-auto dark:hidden">
+          <img src="{{ asset('images/campingnard-logo-dark.svg') }}" alt="Campingnard" class="h-10 w-auto not-dark:hidden">
+        </a>
+      </div>
+      <div class="flex lg:flex-1 lg:justify-end">
+        {% if app.user %}
+          <a href="{{ path('user_weather_index') }}" class="text-sm/6 font-semibold text-gray-900 dark:text-white">{{ 'nav.dashboard'|trans }} <span aria-hidden="true">&rarr;</span></a>
+        {% else %}
+          <a href="{{ path('app_login') }}" class="text-sm/6 font-semibold text-gray-900 dark:text-white">{{ 'nav.login'|trans }} <span aria-hidden="true">&rarr;</span></a>
+        {% endif %}
+      </div>
+    </nav>
+  </header>
+
+  <main class="relative isolate pt-24 pb-16">
+    <svg aria-hidden="true" class="absolute inset-0 -z-10 size-full stroke-gray-200 dark:stroke-white/10" style="mask-image: radial-gradient(100% 100% at top right, white, transparent)">
+      <defs>
+        <pattern id="grid-pattern" width="200" height="200" x="50%" y="-1" patternUnits="userSpaceOnUse">
+          <path d="M100 200V.5M.5 .5H200" fill="none" />
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#grid-pattern)" stroke-width="0" />
+    </svg>
+
+    <div class="mx-auto max-w-3xl px-6 lg:px-8">
+      <div class="mb-2">
+        <a href="{{ path('home') }}" class="text-sm/6 font-semibold text-green-600 hover:text-green-500 dark:text-green-400">
+          <span aria-hidden="true">&larr;</span> Retour
+        </a>
+      </div>
+      <h1 class="mt-6 text-4xl font-semibold tracking-tight text-gray-900 dark:text-white">Mentions légales</h1>
+      <p class="mt-3 text-sm text-gray-500 dark:text-gray-400">Dernière mise à jour : 14 juillet 2026</p>
+
+      <div class="mt-10 text-gray-700 dark:text-gray-300 space-y-8">
+
+        <section>
+          <h2 class="text-xl font-semibold text-gray-900 dark:text-white">1. Éditeur du site</h2>
+          <p class="mt-3 pl-4 border-l-2 border-green-600 dark:border-green-400 text-gray-600 dark:text-gray-400">
+            <strong class="text-gray-900 dark:text-white">[NOM DE LA SOCIÉTÉ / NOM ET PRÉNOM]</strong><br>
+            [Forme juridique — ex. : Auto-entrepreneur / SARL / SAS…]<br>
+            [Capital social, le cas échéant]<br>
+            [Adresse du siège social]<br>
+            [Numéro SIRET]<br>
+            [Numéro de TVA intracommunautaire, le cas échéant]<br>
+            Email : <a href="mailto:[email de contact]" class="text-green-600 hover:text-green-500 dark:text-green-400">[email de contact]</a>
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-semibold text-gray-900 dark:text-white">2. Directeur de la publication</h2>
+          <p class="mt-3">[NOM ET PRÉNOM du directeur de la publication]</p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-semibold text-gray-900 dark:text-white">3. Hébergement</h2>
+          <p class="mt-3">Le site Campingnard est hébergé par :</p>
+          <p class="mt-2 pl-4 border-l-2 border-green-600 dark:border-green-400 text-gray-600 dark:text-gray-400">
+            <strong class="text-gray-900 dark:text-white">[NOM DE L'HÉBERGEUR]</strong><br>
+            [Adresse de l'hébergeur]<br>
+            [Site web de l'hébergeur]
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-semibold text-gray-900 dark:text-white">4. Propriété intellectuelle</h2>
+          <p class="mt-3">L'ensemble des contenus présents sur le site Campingnard (textes, images, logo, code source) sont la propriété exclusive de l'éditeur, sauf mention contraire. Toute reproduction, distribution ou utilisation sans autorisation préalable est interdite.</p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-semibold text-gray-900 dark:text-white">5. Données personnelles</h2>
+          <p class="mt-3">La collecte et le traitement des données personnelles sont détaillés dans notre <a href="{{ path('privacy_policy') }}" class="text-green-600 hover:text-green-500 dark:text-green-400">Politique de confidentialité</a>.</p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-semibold text-gray-900 dark:text-white">6. Responsabilité</h2>
+          <p class="mt-3">L'éditeur s'efforce d'assurer l'exactitude et la mise à jour des informations publiées sur Campingnard. Il ne saurait toutefois être tenu responsable des erreurs ou omissions, ni des résultats qui pourraient être obtenus par un mauvais usage des informations.</p>
+          <p class="mt-3">Les données météorologiques affichées proviennent de services tiers (Open-Meteo, OpenStreetMap). L'éditeur ne garantit pas leur exactitude et décline toute responsabilité pour les décisions prises sur la base de ces informations.</p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-semibold text-gray-900 dark:text-white">7. Droit applicable</h2>
+          <p class="mt-3">Les présentes mentions légales sont soumises au droit français. En cas de litige, les tribunaux français seront seuls compétents.</p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-semibold text-gray-900 dark:text-white">8. Contact</h2>
+          <p class="mt-3">Pour toute question relative au site ou à son contenu, vous pouvez nous contacter à l'adresse : <strong>[email de contact]</strong></p>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <footer class="border-t border-gray-200 dark:border-white/10">
+    <div class="mx-auto max-w-7xl px-6 py-8 lg:px-8 md:flex md:items-center md:justify-between">
+      <p class="text-sm/6 text-gray-600 dark:text-gray-400">&copy; 2026 Campingnard. Tous droits réservés.</p>
+      <div class="mt-4 md:mt-0 flex gap-x-6">
+        <a href="{{ path('privacy_policy') }}" class="text-sm/6 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">Politique de confidentialité</a>
+        <a href="{{ path('legal_mentions') }}" class="text-sm/6 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">Mentions légales</a>
+      </div>
+    </div>
+  </footer>
+</div>
+{% endblock %}

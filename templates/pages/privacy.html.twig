@@ -1,0 +1,138 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Politique de confidentialité — Campingnard{% endblock %}
+
+{% block body %}
+<div class="bg-white dark:bg-gray-900">
+  <header class="absolute inset-x-0 top-0 z-50">
+    <nav aria-label="Global" class="flex items-center justify-between p-6 lg:px-8">
+      <div class="flex items-center gap-x-4 lg:flex-1">
+        <a href="{{ path('home') }}" class="-m-1.5 p-1.5">
+          <span class="sr-only">Campingnard</span>
+          <img src="{{ asset('images/campingnard-logo-light.svg') }}" alt="Campingnard" class="h-10 w-auto dark:hidden">
+          <img src="{{ asset('images/campingnard-logo-dark.svg') }}" alt="Campingnard" class="h-10 w-auto not-dark:hidden">
+        </a>
+      </div>
+      <div class="flex lg:flex-1 lg:justify-end">
+        {% if app.user %}
+          <a href="{{ path('user_weather_index') }}" class="text-sm/6 font-semibold text-gray-900 dark:text-white">{{ 'nav.dashboard'|trans }} <span aria-hidden="true">&rarr;</span></a>
+        {% else %}
+          <a href="{{ path('app_login') }}" class="text-sm/6 font-semibold text-gray-900 dark:text-white">{{ 'nav.login'|trans }} <span aria-hidden="true">&rarr;</span></a>
+        {% endif %}
+      </div>
+    </nav>
+  </header>
+
+  <main class="relative isolate pt-24 pb-16">
+    <svg aria-hidden="true" class="absolute inset-0 -z-10 size-full stroke-gray-200 dark:stroke-white/10" style="mask-image: radial-gradient(100% 100% at top right, white, transparent)">
+      <defs>
+        <pattern id="grid-pattern" width="200" height="200" x="50%" y="-1" patternUnits="userSpaceOnUse">
+          <path d="M100 200V.5M.5 .5H200" fill="none" />
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#grid-pattern)" stroke-width="0" />
+    </svg>
+
+    <div class="mx-auto max-w-3xl px-6 lg:px-8">
+      <div class="mb-2">
+        <a href="{{ path('home') }}" class="text-sm/6 font-semibold text-green-600 hover:text-green-500 dark:text-green-400">
+          <span aria-hidden="true">&larr;</span> Retour
+        </a>
+      </div>
+      <h1 class="mt-6 text-4xl font-semibold tracking-tight text-gray-900 dark:text-white">Politique de confidentialité</h1>
+      <p class="mt-3 text-sm text-gray-500 dark:text-gray-400">Dernière mise à jour : 14 juillet 2026</p>
+
+      <div class="mt-10 prose prose-green dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 space-y-8">
+
+        <section>
+          <h2 class="text-xl font-semibold text-gray-900 dark:text-white">1. Responsable du traitement</h2>
+          <p class="mt-3">Le responsable du traitement des données personnelles collectées via l'application Campingnard est :</p>
+          <p class="mt-2 pl-4 border-l-2 border-green-600 dark:border-green-400 text-gray-600 dark:text-gray-400">
+            <strong class="text-gray-900 dark:text-white">[NOM DE LA SOCIÉTÉ / NOM DU RESPONSABLE]</strong><br>
+            [Adresse]<br>
+            [Email de contact]
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-semibold text-gray-900 dark:text-white">2. Données collectées</h2>
+          <p class="mt-3">Lors de l'utilisation de Campingnard, nous collectons les données suivantes :</p>
+          <ul class="mt-3 ml-6 list-disc space-y-2">
+            <li><strong>Adresse e-mail</strong> : lors de la création de votre compte, utilisée pour l'authentification et les communications transactionnelles (confirmation d'inscription, réinitialisation de mot de passe, rappels de batterie).</li>
+            <li><strong>Données de localisation géographique</strong> : recueillies en temps réel via votre navigateur avec votre consentement explicite, uniquement pour afficher la météo locale. Ces coordonnées ne sont pas stockées sur nos serveurs.</li>
+            <li><strong>Contenu utilisateur</strong> : les éléments de vos checklists et informations relatives à vos équipements (batteries), stockés pour vous permettre d'y accéder depuis votre compte.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-semibold text-gray-900 dark:text-white">3. Finalités du traitement</h2>
+          <p class="mt-3">Vos données sont utilisées pour :</p>
+          <ul class="mt-3 ml-6 list-disc space-y-2">
+            <li>Créer et gérer votre compte utilisateur ;</li>
+            <li>Vous fournir les fonctionnalités de l'application (météo, checklist, suivi de batterie) ;</li>
+            <li>Vous envoyer des rappels de charge pour vos équipements ;</li>
+            <li>Assurer la sécurité et la stabilité du service.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-semibold text-gray-900 dark:text-white">4. Base légale</h2>
+          <p class="mt-3">Le traitement de vos données repose sur :</p>
+          <ul class="mt-3 ml-6 list-disc space-y-2">
+            <li><strong>L'exécution du contrat</strong> : pour vous fournir les services de l'application ;</li>
+            <li><strong>Votre consentement</strong> : pour l'accès à votre localisation géographique.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-semibold text-gray-900 dark:text-white">5. Conservation des données</h2>
+          <p class="mt-3">Vos données sont conservées pendant toute la durée de votre compte. Lors de la suppression de votre compte, vos données personnelles sont effacées dans un délai de 30 jours.</p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-semibold text-gray-900 dark:text-white">6. Partage des données</h2>
+          <p class="mt-3">Nous ne vendons ni ne louons vos données à des tiers. Vos données peuvent être transmises à des prestataires techniques dans le strict cadre de la fourniture du service (hébergement). L'application utilise les services tiers suivants :</p>
+          <ul class="mt-3 ml-6 list-disc space-y-2">
+            <li><strong>Open-Meteo</strong> (météo) : vos coordonnées GPS lui sont transmises ponctuellement pour obtenir les prévisions. Consultez leur <a href="https://open-meteo.com/en/terms" class="text-green-600 hover:text-green-500 dark:text-green-400" target="_blank" rel="noopener">politique de confidentialité</a>.</li>
+            <li><strong>OpenStreetMap / Nominatim</strong> (carte et géocodage inverse) : vos coordonnées GPS lui sont transmises pour afficher votre position. Consultez leur <a href="https://wiki.osmfoundation.org/wiki/Privacy_Policy" class="text-green-600 hover:text-green-500 dark:text-green-400" target="_blank" rel="noopener">politique de confidentialité</a>.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-semibold text-gray-900 dark:text-white">7. Vos droits (RGPD)</h2>
+          <p class="mt-3">Conformément au Règlement Général sur la Protection des Données (RGPD), vous disposez des droits suivants :</p>
+          <ul class="mt-3 ml-6 list-disc space-y-2">
+            <li>Droit d'accès à vos données ;</li>
+            <li>Droit de rectification ;</li>
+            <li>Droit à l'effacement (droit à l'oubli) ;</li>
+            <li>Droit à la portabilité ;</li>
+            <li>Droit d'opposition et de limitation du traitement.</li>
+          </ul>
+          <p class="mt-3">Pour exercer ces droits, contactez-nous à : <strong>[email de contact]</strong>. Vous pouvez également introduire une réclamation auprès de la <a href="https://www.cnil.fr" class="text-green-600 hover:text-green-500 dark:text-green-400" target="_blank" rel="noopener">CNIL</a>.</p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-semibold text-gray-900 dark:text-white">8. Cookies</h2>
+          <p class="mt-3">Campingnard utilise uniquement des cookies strictement nécessaires au fonctionnement du service (session d'authentification). Aucun cookie publicitaire ou de traçage tiers n'est utilisé.</p>
+        </section>
+
+        <section>
+          <h2 class="text-xl font-semibold text-gray-900 dark:text-white">9. Modifications</h2>
+          <p class="mt-3">Nous nous réservons le droit de modifier cette politique. Toute modification substantielle vous sera notifiée par e-mail ou via l'application.</p>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <footer class="border-t border-gray-200 dark:border-white/10">
+    <div class="mx-auto max-w-7xl px-6 py-8 lg:px-8 md:flex md:items-center md:justify-between">
+      <p class="text-sm/6 text-gray-600 dark:text-gray-400">&copy; 2026 Campingnard. Tous droits réservés.</p>
+      <div class="mt-4 md:mt-0 flex gap-x-6">
+        <a href="{{ path('privacy_policy') }}" class="text-sm/6 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">Politique de confidentialité</a>
+        <a href="{{ path('legal_mentions') }}" class="text-sm/6 text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white">Mentions légales</a>
+      </div>
+    </div>
+  </footer>
+</div>
+{% endblock %}

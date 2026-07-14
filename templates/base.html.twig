@@ -6,6 +6,20 @@
         <title>{% block title %}{{ 'page.welcome_title'|trans }}{% endblock %}</title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
         <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+        <style type="text/tailwindcss">
+        @theme {
+          --color-green-50: #f0fdf4;
+          --color-green-100: #dcfce7;
+          --color-green-200: #bbf7d0;
+          --color-green-300: #86efac;
+          --color-green-400: #2d9e59;
+          --color-green-500: #1e7a43;
+          --color-green-600: #185d34;
+          --color-green-700: #145228;
+          --color-green-800: #0f3d1e;
+          --color-green-900: #0a2818;
+        }
+        </style>
         {% block stylesheets %}
         {% endblock %}
 
