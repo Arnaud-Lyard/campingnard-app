@@ -4,10 +4,10 @@ set -e
 if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
 
 	if [ -n "$JWT_SECRET_KEY_B64" ] && [ -n "$JWT_PUBLIC_KEY_B64" ]; then
-		mkdir -p config/jwt
-		echo "$JWT_SECRET_KEY_B64" | base64 -d > config/jwt/private.pem
-		echo "$JWT_PUBLIC_KEY_B64"  | base64 -d > config/jwt/public.pem
-		chmod 600 config/jwt/private.pem
+		mkdir -p /tmp/jwt
+		echo "$JWT_SECRET_KEY_B64" | base64 -d > /tmp/jwt/private.pem
+		echo "$JWT_PUBLIC_KEY_B64"  | base64 -d > /tmp/jwt/public.pem
+		chmod 600 /tmp/jwt/private.pem
 	fi
 
 	if [ -z "$(ls -A 'vendor/' 2>/dev/null)" ]; then
