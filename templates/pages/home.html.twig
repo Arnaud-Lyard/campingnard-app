@@ -1,6 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Home{% endblock %}
+{% set page_description = 'seo.home.description'|trans %}
+
+{% block title %}{{ 'seo.home.title'|trans }}{% endblock %}
+
+{% block page_hreflang %}
+<link rel="alternate" hreflang="fr" href="{{ absolute_url(path('home', {'_locale': 'fr'})) }}">
+<link rel="alternate" hreflang="en" href="{{ absolute_url(path('home', {'_locale': 'en'})) }}">
+<link rel="alternate" hreflang="x-default" href="{{ absolute_url(path('home', {'_locale': 'fr'})) }}">
+{% endblock %}
 
 {% block body %}
 <div class="bg-white dark:bg-gray-900">

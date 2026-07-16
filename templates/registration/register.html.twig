@@ -1,5 +1,8 @@
 {% extends 'base.html.twig' %}
 
+{% set page_description = 'seo.register.description'|trans %}
+{% set page_robots = 'noindex, nofollow' %}
+
 {% block title %}{{ 'auth.register.page_title'|trans }}{% endblock %}
 
 {% set input_class = 'block w-full rounded-md border border-gray-300 px-3 py-1.5 text-gray-900 placeholder:text-gray-400 focus:border-green-600 focus:ring-2 focus:ring-green-600 focus:outline-none sm:text-sm' %}

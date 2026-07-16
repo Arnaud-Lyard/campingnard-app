@@ -2,6 +2,19 @@ page:
     welcome_title: "Welcome!"
     user_space_title: "Welcome to your area!"
 
+seo:
+    home:
+        title: "Campingnard – Your camping & caravanning companion"
+        description: "Manage your camping gear, track real-time weather and organise your outdoor trips with the Campingnard app."
+    legal:
+        description: "Legal information for the Campingnard website: publisher, hosting, intellectual property and personal data."
+    privacy:
+        description: "Learn how Campingnard collects, uses and protects your personal data."
+    login:
+        description: "Sign in to your Campingnard account to manage your gear, check the weather and plan your camping trips."
+    register:
+        description: "Create your free Campingnard account and start organising your camping and caravanning adventures."
+
 nav:
     dashboard: "Dashboard"
     checklist: "Checklist"
@@ -31,7 +44,7 @@ auth:
     toggle_password: "Show/hide password"
     back_to_login: "Back to login"
     login:
-        page_title: "Login"
+        page_title: "Login – Campingnard"
         heading: "Sign in to your account"
         no_account: "Don't have an account yet?"
         register_link: "Sign up"
@@ -39,7 +52,7 @@ auth:
         forgot_password: "Forgot your password?"
         submit: "Sign in"
     register:
-        page_title: "Sign up"
+        page_title: "Sign up – Campingnard"
         heading: "Create your account"
         already_registered: "Already registered?"
         login_link: "Sign in"
@@ -52,18 +65,18 @@ auth:
         fr: "🇫🇷 French"
         en: "🇬🇧 English"
     reset_request:
-        page_title: "Forgot password"
+        page_title: "Forgot password – Campingnard"
         heading: "Forgot your password?"
         intro: "Enter your email address and we'll send you a link to reset your password."
         submit: "Reset my password"
     check_email:
-        page_title: "Check your email"
+        page_title: "Check your email – Campingnard"
         heading: "Check your email"
         sent: "If an account matches the address you entered, an email has just been sent to you with a link to reset your password. This link will expire in %duration%."
         spam_before: "If you don't receive an email, check your spam folder or"
         retry: "try again"
     reset:
-        page_title: "New password"
+        page_title: "New password – Campingnard"
         heading: "Choose a new password"
         new_password_label: "New password"
         new_password_placeholder: "Your new password"

@@ -2,6 +2,19 @@ page:
     welcome_title: "Bienvenue !"
     user_space_title: "Bienvenue dans votre espace !"
 
+seo:
+    home:
+        title: "Campingnard – Votre compagnon de camping et caravaning"
+        description: "Gérez votre équipement de camping, suivez la météo en temps réel et organisez vos sorties en plein air avec l'application Campingnard."
+    legal:
+        description: "Informations légales du site Campingnard : éditeur, hébergeur, propriété intellectuelle et données personnelles."
+    privacy:
+        description: "Découvrez comment Campingnard collecte, utilise et protège vos données personnelles."
+    login:
+        description: "Accédez à votre espace Campingnard pour gérer vos équipements, consulter la météo et préparer vos sorties camping."
+    register:
+        description: "Créez gratuitement votre compte Campingnard et commencez à organiser vos aventures en camping-caravaning."
+
 nav:
     dashboard: "Tableau de bord"
     checklist: "Checklist"
@@ -31,7 +44,7 @@ auth:
     toggle_password: "Afficher/masquer le mot de passe"
     back_to_login: "Retour à la connexion"
     login:
-        page_title: "Connexion"
+        page_title: "Connexion – Campingnard"
         heading: "Connectez-vous à votre compte"
         no_account: "Pas encore de compte ?"
         register_link: "Inscrivez-vous"
@@ -39,7 +52,7 @@ auth:
         forgot_password: "Mot de passe oublié ?"
         submit: "Se connecter"
     register:
-        page_title: "Inscription"
+        page_title: "Inscription – Campingnard"
         heading: "Créez votre compte"
         already_registered: "Déjà inscrit ?"
         login_link: "Connectez-vous"
@@ -52,18 +65,18 @@ auth:
         fr: "🇫🇷 Français"
         en: "🇬🇧 Anglais"
     reset_request:
-        page_title: "Mot de passe oublié"
+        page_title: "Mot de passe oublié – Campingnard"
         heading: "Mot de passe oublié ?"
         intro: "Saisissez votre adresse e-mail, nous vous enverrons un lien pour réinitialiser votre mot de passe."
         submit: "Réinitialiser mon mot de passe"
     check_email:
-        page_title: "Vérifiez vos e-mails"
+        page_title: "Vérifiez vos e-mails – Campingnard"
         heading: "Vérifiez vos e-mails"
         sent: "Si un compte correspond à l'adresse saisie, un e-mail vient de vous être envoyé avec un lien permettant de réinitialiser votre mot de passe. Ce lien expirera dans %duration%."
         spam_before: "Si vous ne recevez pas d'e-mail, vérifiez votre dossier de courriers indésirables ou"
         retry: "réessayez"
     reset:
-        page_title: "Nouveau mot de passe"
+        page_title: "Nouveau mot de passe – Campingnard"
         heading: "Choisissez un nouveau mot de passe"
         new_password_label: "Nouveau mot de passe"
         new_password_placeholder: "Votre nouveau mot de passe"

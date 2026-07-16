@@ -4,6 +4,27 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{% block title %}{{ 'page.welcome_title'|trans }}{% endblock %}</title>
+        {% block meta %}
+        {% set _robots = page_robots is defined ? page_robots : 'index, follow' %}
+        {% set _desc   = page_description is defined ? page_description : '' %}
+        {% set _img    = page_og_image is defined ? page_og_image : absolute_url(asset('images/campingnard-mobile.png')) %}
+        {% set _url    = app.request.schemeAndHttpHost ~ app.request.baseUrl ~ app.request.pathInfo %}
+        <meta name="robots" content="{{ _robots }}">
+        {% if _desc %}<meta name="description" content="{{ _desc }}">{% endif %}
+        <link rel="canonical" href="{{ _url }}">
+        {% block page_hreflang %}{% endblock %}
+        <meta property="og:type" content="website">
+        <meta property="og:site_name" content="Campingnard">
+        <meta property="og:title" content="{{ block('title') }}">
+        {% if _desc %}<meta property="og:description" content="{{ _desc }}">{% endif %}
+        <meta property="og:url" content="{{ _url }}">
+        <meta property="og:locale" content="{{ app.request.locale == 'fr' ? 'fr_FR' : 'en_GB' }}">
+        {% if _img %}<meta property="og:image" content="{{ _img }}">{% endif %}
+        <meta name="twitter:card" content="{{ _img ? 'summary_large_image' : 'summary' }}">
+        <meta name="twitter:title" content="{{ block('title') }}">
+        {% if _desc %}<meta name="twitter:description" content="{{ _desc }}">{% endif %}
+        {% if _img %}<meta name="twitter:image" content="{{ _img }}">{% endif %}
+        {% endblock %}
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
         <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
         <style type="text/tailwindcss">
