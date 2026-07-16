@@ -1,6 +1,12 @@
 # Executables (local)
 DOCKER_COMP = docker compose
 
+# Production image
+REGISTRY  ?= docker.io/arnaudlyard
+IMAGE     ?= campingnard
+TAG       ?= latest
+FULL_IMAGE = $(REGISTRY)/$(IMAGE):$(TAG)
+
 # Docker containers
 PHP_CONT = $(DOCKER_COMP) exec php
 
@@ -11,7 +17,7 @@ SYMFONY  = $(PHP) bin/console
 
 # Misc
 .DEFAULT_GOAL = help
-.PHONY        : help build up start down logs sh composer vendor sf cc test lint lint-fix reset-database reset-database-hard
+.PHONY        : help build up start down logs sh composer vendor sf cc test lint lint-fix reset-database reset-database-hard prod-build prod-push prod-release
 
 ## —— 🎵 🐳 The Symfony Docker Makefile 🐳 🎵 ——————————————————————————————————
 help: ## Outputs this help screen
@@ -42,6 +48,15 @@ test: ## Start tests with phpunit, pass the parameter "c=" to add options to php
 	@$(eval c ?=)
 	@$(DOCKER_COMP) exec -e APP_ENV=test php bin/phpunit $(c)
 
+
+## —— Production 🚀 ————————————————————————————————————————————————————————————
+prod-build: ## Build the production image (target: frankenphp_prod). Override with REGISTRY=, IMAGE=, TAG=
+	@docker build --target frankenphp_prod --pull --no-cache -t $(FULL_IMAGE) .
+
+prod-push: ## Push the production image to the registry
+	@docker push $(FULL_IMAGE)
+
+prod-release: prod-build prod-push ## Build and push the production image
 
 ## —— Composer 🧙 ——————————————————————————————————————————————————————————————
 composer: ## Run composer, pass the parameter "c=" to run a given command, example: make composer c='req symfony/orm-pack'
