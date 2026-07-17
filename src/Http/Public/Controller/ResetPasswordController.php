@@ -187,7 +187,7 @@ class ResetPasswordController extends AbstractController
         }
 
         $email = new TemplatedEmail()
-            ->from(new Address("mailer@camping.fr", "Camping"))
+            ->from(new Address("send@campingnard.fr", "Campingnard"))
             ->to((string) $user->getEmail())
             ->subject($translator->trans("email.reset.subject"))
             ->locale($locale)

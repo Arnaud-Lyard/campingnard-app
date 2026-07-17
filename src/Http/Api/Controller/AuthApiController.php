@@ -105,7 +105,7 @@ final class AuthApiController extends AbstractController
                 $resetToken = $resetHelper->generateResetToken($user);
                 $mailer->send(
                     new TemplatedEmail()
-                        ->from(new Address("mailer@camping.fr", "Camping"))
+                        ->from(new Address("send@campingnard.fr", "Campingnard"))
                         ->to((string) $user->getEmail())
                         ->subject(
                             $this->translator->trans("email.reset.subject"),
