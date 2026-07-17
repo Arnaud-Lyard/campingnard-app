@@ -40,7 +40,7 @@ class TestimonialConfirm implements EventSubscriberInterface
         );
 
         $message = (new TemplatedEmail())
-            ->from(new Address("send@campingnard.fr", "Campingnard"))
+            ->from(new Address("send@campingnard.com", "Campingnard"))
             ->to($event->getUser()->getEmail())
             ->subject("Confirmez votre avis")
             ->htmlTemplate("testimonial/confirmation_email.html.twig")

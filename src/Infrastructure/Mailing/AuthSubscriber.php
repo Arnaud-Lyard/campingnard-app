@@ -40,7 +40,7 @@ class AuthSubscriber implements EventSubscriberInterface
         );
 
         $email = new TemplatedEmail()
-            ->from(new Address("send@campingnard.fr", "Campingnard"))
+            ->from(new Address("send@campingnard.com", "Campingnard"))
             ->to((string) $event->getUser()->getEmail())
             ->subject($this->translator->trans("email.confirm.subject"))
             ->locale($event->getLocale())
