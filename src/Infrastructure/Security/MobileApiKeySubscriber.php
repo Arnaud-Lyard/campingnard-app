@@ -9,13 +9,20 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
- * Rejects any /api/ request that does not carry the correct X-Api-Key header.
+ * Rejects any /api/ request whose HMAC-SHA256 signature is missing, invalid,
+ * or older than WINDOW_SECONDS (replay protection).
+ *
+ * The mobile app signs: "{timestamp}\n{METHOD}\n{path}" with the shared secret
+ * and sends X-Timestamp + X-Signature headers on every request.
+ *
  * Runs before the JWT firewall (priority 10 > firewall priority 8) so unknown
  * clients never reach authentication logic.
  */
 final class MobileApiKeySubscriber implements EventSubscriberInterface
 {
-    public function __construct(private readonly string $mobileApiKey) {}
+    private const WINDOW_SECONDS = 300;
+
+    public function __construct(private readonly string $hmacSecret) {}
 
     public static function getSubscribedEvents(): array
     {
@@ -34,13 +41,32 @@ final class MobileApiKeySubscriber implements EventSubscriberInterface
             return;
         }
 
-        $key = $request->headers->get('X-Api-Key', '');
+        $timestamp = $request->headers->get('X-Timestamp', '');
+        $signature = $request->headers->get('X-Signature', '');
 
-        if (!hash_equals($this->mobileApiKey, $key)) {
-            $event->setResponse(new JsonResponse(
-                ['error' => 'forbidden'],
-                Response::HTTP_FORBIDDEN,
-            ));
+        if (!$timestamp || !$signature) {
+            $this->deny($event);
+            return;
         }
+
+        if (abs(time() - (int) $timestamp) > self::WINDOW_SECONDS) {
+            $this->deny($event);
+            return;
+        }
+
+        $message = "{$timestamp}\n{$request->getMethod()}\n{$request->getPathInfo()}";
+        $expected = hash_hmac('sha256', $message, $this->hmacSecret);
+
+        if (!hash_equals($expected, $signature)) {
+            $this->deny($event);
+        }
+    }
+
+    private function deny(RequestEvent $event): void
+    {
+        $event->setResponse(new JsonResponse(
+            ['error' => 'forbidden'],
+            Response::HTTP_FORBIDDEN,
+        ));
     }
 }
