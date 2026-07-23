@@ -24,7 +24,7 @@
             </div>
 
             <div class="mt-10">
-                {% for flash_error in app.flashes('verify_email_error') %}
+                {% for flash_error in app.flashes('verify_email_error')|merge(app.flashes('error')) %}
                     <div class="mb-6 rounded-md bg-red-50 p-4 text-sm text-red-700" role="alert">{{ flash_error }}</div>
                 {% endfor %}
 

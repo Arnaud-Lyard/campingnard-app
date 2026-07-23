@@ -189,6 +189,7 @@ weather:
     source: "Source: Open-Meteo · SunCalc"
 
 flash:
+    too_many_attempts: "Too many attempts. Please try again later."
     email_verified: "Your email address has been verified. You can now log in."
 
 email:

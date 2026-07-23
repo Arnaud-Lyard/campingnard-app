@@ -1,0 +1,7 @@
+framework:
+    rate_limiter:
+        # Bucket for every /api request, keyed by client IP.
+        api:
+            policy: sliding_window
+            limit: 60
+            interval: '1 minute'

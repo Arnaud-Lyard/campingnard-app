@@ -22,6 +22,10 @@
             </div>
 
             <div class="mt-10">
+                {% for flash_error in app.flashes('error') %}
+                    <div class="mb-6 rounded-md bg-red-50 p-4 text-sm text-red-700" role="alert">{{ flash_error }}</div>
+                {% endfor %}
+
                 {{ form_start(requestForm, {attr: {class: 'space-y-6'}}) }}
                     <div>
                         {{ form_label(requestForm.email, 'auth.email_label'|trans, {label_attr: {class: 'block text-sm font-medium text-gray-900'}}) }}

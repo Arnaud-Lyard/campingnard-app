@@ -29,7 +29,6 @@ class RegistrationController extends AbstractController
         Request $request,
         UserPasswordHasherInterface $userPasswordHasher,
         EntityManagerInterface $entityManager,
-        TranslatorInterface $translator,
     ): Response {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
