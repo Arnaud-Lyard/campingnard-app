@@ -26,8 +26,8 @@ services:
     Logtail\Monolog\LogtailHandler:
         autoconfigure: true
         arguments:
-            $sourceToken: '%env(BETTER_STACK_SOURCE_TOKEN)%'
-            $endpoint: '%env(BETTER_STACK_SOURCE_ENDPOINT)%'
+            $sourceToken: "%env(BETTER_STACK_SOURCE_TOKEN)%"
+            $endpoint: "%env(BETTER_STACK_SOURCE_ENDPOINT)%"
         tags:
             - { name: monolog.handler }
 

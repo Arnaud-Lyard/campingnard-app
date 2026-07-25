@@ -4,4 +4,4 @@ framework:
         api:
             policy: sliding_window
             limit: 60
-            interval: '1 minute'
+            interval: "1 minute"

@@ -31,7 +31,7 @@ security:
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
             login_throttling:
                 max_attempts: 5
-                interval: '1 minute'
+                interval: "1 minute"
         api:
             pattern: ^/api
             stateless: true
@@ -49,7 +49,7 @@ security:
                 default_target_path: user_weather_index
             login_throttling:
                 max_attempts: 5
-                interval: '1 minute'
+                interval: "1 minute"
             logout:
                 path: app_logout
                 target: app_login
