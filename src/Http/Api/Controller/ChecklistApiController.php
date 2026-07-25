@@ -3,6 +3,11 @@
 namespace App\Http\Api\Controller;
 
 use App\Domain\Auth\Entity\User;
+use App\Domain\Checklist\DTO\BulkDeleteChecklistDTO;
+use App\Domain\Checklist\DTO\ChecklistNameDTO;
+use App\Domain\Checklist\DTO\GenerateChecklistDTO;
+use App\Domain\Checklist\DTO\ReorderChecklistDTO;
+use App\Domain\Checklist\DTO\UpdateChecklistStatusDTO;
 use App\Domain\Checklist\Entity\Checklist;
 use App\Domain\Checklist\Enum\ChecklistStatus;
 use App\Domain\Checklist\ChecklistPresets;
@@ -10,8 +15,8 @@ use App\Domain\Checklist\Repository\ChecklistRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route("/checklist")]
@@ -30,9 +35,9 @@ final class ChecklistApiController extends AbstractController
     }
 
     #[Route("", name: "api_checklist_create", methods: ["POST"])]
-    public function create(Request $request, ChecklistRepository $repository): JsonResponse
+    public function create(#[MapRequestPayload] ChecklistNameDTO $createDatas, ChecklistRepository $repository): JsonResponse
     {
-        $name = trim((string) $request->getPayload()->get("name", ""));
+        $name = trim($createDatas->name);
         if ("" === $name) {
             return $this->json(["error" => "name_required"], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
@@ -55,11 +60,10 @@ final class ChecklistApiController extends AbstractController
     }
 
     #[Route("/generate", name: "api_checklist_generate", methods: ["POST"])]
-    public function generate(Request $request, ChecklistRepository $repository): JsonResponse
+    public function generate(#[MapRequestPayload] GenerateChecklistDTO $generateDatas, ChecklistRepository $repository): JsonResponse
     {
         $user = $this->currentUser();
-        $locale = (string) $request->getPayload()->get("locale", "fr");
-        $names = ChecklistPresets::forLocale($locale);
+        $names = ChecklistPresets::forLocale($generateDatas->locale);
 
         $repository->shiftDown($user, \count($names));
 
@@ -83,9 +87,9 @@ final class ChecklistApiController extends AbstractController
     }
 
     #[Route("/reorder", name: "api_checklist_reorder", methods: ["POST"])]
-    public function reorder(Request $request, ChecklistRepository $repository): JsonResponse
+    public function reorder(#[MapRequestPayload] ReorderChecklistDTO $reorderDatas, ChecklistRepository $repository): JsonResponse
     {
-        $ids = $this->ids($request);
+        $ids = $this->ids($reorderDatas->ids);
         if (!$ids) {
             return $this->json(["error" => "ids_required"], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
@@ -104,14 +108,14 @@ final class ChecklistApiController extends AbstractController
     }
 
     #[Route("/status", name: "api_checklist_status", methods: ["POST"])]
-    public function status(Request $request, ChecklistRepository $repository): JsonResponse
+    public function status(#[MapRequestPayload] UpdateChecklistStatusDTO $statusDatas, ChecklistRepository $repository): JsonResponse
     {
         try {
-            $status = ChecklistStatus::fromKey((string) $request->getPayload()->get("status", ""));
+            $status = ChecklistStatus::fromKey($statusDatas->status);
         } catch (\ValueError) {
             return $this->json(["error" => "invalid_status"], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
-        $ids = $this->ids($request);
+        $ids = $this->ids($statusDatas->ids);
         if (!$ids) {
             return $this->json(["error" => "ids_required"], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
@@ -129,9 +133,9 @@ final class ChecklistApiController extends AbstractController
     }
 
     #[Route("/bulk-delete", name: "api_checklist_bulk_delete", methods: ["POST"])]
-    public function bulkDelete(Request $request, ChecklistRepository $repository): JsonResponse
+    public function bulkDelete(#[MapRequestPayload] BulkDeleteChecklistDTO $bulkDeleteDatas, ChecklistRepository $repository): JsonResponse
     {
-        $ids = $this->ids($request);
+        $ids = $this->ids($bulkDeleteDatas->ids);
         if (!$ids) {
             return $this->json(["error" => "ids_required"], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
@@ -149,14 +153,14 @@ final class ChecklistApiController extends AbstractController
     }
 
     #[Route("/{id}", name: "api_checklist_update", methods: ["PATCH", "PUT"], requirements: ["id" => "\\d+"])]
-    public function update(int $id, Request $request, ChecklistRepository $repository): JsonResponse
+    public function update(int $id, #[MapRequestPayload] ChecklistNameDTO $updateDatas, ChecklistRepository $repository): JsonResponse
     {
         $checklist = $repository->findOneBy(["id" => $id, "owner" => $this->currentUser()]);
         if (!$checklist) {
             return $this->json(["error" => "not_found"], Response::HTTP_NOT_FOUND);
         }
 
-        $name = trim((string) $request->getPayload()->get("name", ""));
+        $name = trim($updateDatas->name);
         if ("" === $name) {
             return $this->json(["error" => "name_required"], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
@@ -194,14 +198,12 @@ final class ChecklistApiController extends AbstractController
     }
 
     /**
+     * @param mixed[] $rawIds
      * @return int[]
      */
-    private function ids(Request $request): array
+    private function ids(array $rawIds): array
     {
-        return array_values(array_filter(array_map(
-            "intval",
-            (array) $request->getPayload()->all("ids"),
-        )));
+        return array_values(array_filter(array_map("intval", $rawIds)));
     }
 
     private function currentUser(): User

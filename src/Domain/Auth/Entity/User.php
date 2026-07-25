@@ -2,6 +2,7 @@
 
 namespace App\Domain\Auth\Entity;
 
+use App\Domain\Auth\Enum\LocaleEnum;
 use App\Domain\Auth\Repository\UserRepository;
 use App\Domain\Checklist\Entity\Checklist;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -22,8 +23,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 ]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    public const SUPPORTED_LOCALES = ["fr", "en"];
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -47,14 +46,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private bool $isVerified = false;
 
-    #[ORM\Column(length: 8, options: ["default" => "fr"])]
-    private string $locale = "fr";
-
     /**
      * @var Collection<int, Checklist>
      */
     #[ORM\OneToMany(targetEntity: Checklist::class, mappedBy: "owner")]
     private Collection $checklists;
+
+    #[ORM\Column(enumType: LocaleEnum::class)]
+    private ?LocaleEnum $locale = null;
 
     public function __construct()
     {
@@ -157,18 +156,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getLocale(): string
-    {
-        return $this->locale;
-    }
-
-    public function setLocale(string $locale): static
-    {
-        $this->locale = $locale;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Checklist>
      */
@@ -194,6 +181,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $checklist->setOwner(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getLocale(): ?LocaleEnum
+    {
+        return $this->locale;
+    }
+
+    public function setLocale(LocaleEnum $locale): static
+    {
+        $this->locale = $locale;
 
         return $this;
     }

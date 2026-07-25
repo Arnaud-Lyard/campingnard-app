@@ -2,12 +2,13 @@
 
 namespace App\Http\Api\Controller;
 
+use App\Domain\Auth\DTO\DeleteAccountDTO;
 use App\Domain\Auth\Entity\User;
 use App\Domain\Auth\Service\UserDeletionService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -41,7 +42,7 @@ final class MeController extends AbstractController
      */
     #[Route("/me", name: "api_delete_me", methods: ["DELETE"])]
     public function deleteMe(
-        Request $request,
+        #[MapRequestPayload] DeleteAccountDTO $deleteAccountDatas,
         UserPasswordHasherInterface $passwordHasher,
         UserDeletionService $deletionService,
     ): JsonResponse {
@@ -50,8 +51,7 @@ final class MeController extends AbstractController
             throw $this->createAccessDeniedException();
         }
 
-        $password = (string) $request->getPayload()->get("password", "");
-        if (!$password || !$passwordHasher->isPasswordValid($user, $password)) {
+        if (!$passwordHasher->isPasswordValid($user, $deleteAccountDatas->password)) {
             return $this->json(["error" => "invalid_password"], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
