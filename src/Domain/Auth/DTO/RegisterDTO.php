@@ -18,7 +18,7 @@ class RegisterDTO
 
     #[Assert\NotNull]
     #[Assert\Type(LocaleEnum::class)]
-    public readonly string $locale,
+    public readonly LocaleEnum $locale,
 
   ) {}
 }

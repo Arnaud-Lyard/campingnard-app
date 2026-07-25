@@ -2,8 +2,10 @@
 
 namespace App\Infrastructure\Mailing;
 
+use App\Domain\Auth\Event\ResetPasswordEvent;
 use App\Domain\Auth\Event\UserCreatedEvent;
 use Doctrine\ORM\EntityManagerInterface;
+use SymfonyCasts\Bundle\ResetPassword\ResetPasswordHelperInterface;
 use SymfonyCasts\Bundle\VerifyEmail\VerifyEmailHelperInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -18,6 +20,7 @@ class AuthSubscriber implements EventSubscriberInterface
         private MailerInterface $mailer,
         private EntityManagerInterface $entityManager,
         private TranslatorInterface $translator,
+        private ResetPasswordHelperInterface $resetHelper,
     ) {}
 
     /**
@@ -27,6 +30,7 @@ class AuthSubscriber implements EventSubscriberInterface
     {
         return [
             UserCreatedEvent::class => "onRegister",
+            ResetPasswordEvent::class => "onResetPassword",
         ];
     }
 
@@ -56,6 +60,23 @@ class AuthSubscriber implements EventSubscriberInterface
         ] = $signatureComponents->getExpirationMessageData();
 
         $email->context($context);
+        $this->mailer->send($email);
+    }
+
+    public function onResetPassword(ResetPasswordEvent $event): void
+    {
+        $resetToken = $this->resetHelper->generateResetToken($event->getUser());
+
+        $email = new TemplatedEmail()
+            ->from(new Address("send@campingnard.com", "Campingnard"))
+            ->to($event->getUser()->getEmail())
+            ->subject(
+                $this->translator->trans("email.reset.subject"),
+            )
+            ->locale($event->getUser()->getLocale()->value)
+            ->htmlTemplate("reset_password/email.html.twig")
+            ->context(["resetToken" => $resetToken]);
+
         $this->mailer->send($email);
     }
 }

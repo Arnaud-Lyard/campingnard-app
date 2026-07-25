@@ -43,7 +43,7 @@ final class SendBatteryRemindersCommand extends Command
             }
 
             $user = $battery->getOwner();
-            $locale = $user->getLocale();
+            $locale = $user->getLocale()->value;
 
             $email = (new TemplatedEmail())
                 ->from(new Address("send@campingnard.com", "Campingnard"))

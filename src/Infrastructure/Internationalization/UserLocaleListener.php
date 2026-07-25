@@ -20,8 +20,8 @@ final class UserLocaleListener
     public function onKernelRequest(RequestEvent $event): void
     {
         $user = $this->security->getUser();
-        if ($user && $user instanceof User) {
-            $this->localeSwitcher->setLocale($user->getLocale());
+        if ($user instanceof User && $user->getLocale()) {
+            $this->localeSwitcher->setLocale($user->getLocale()->value);
         }
     }
 }

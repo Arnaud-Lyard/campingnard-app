@@ -3,9 +3,10 @@
 namespace App\Domain\Auth\Form;
 
 use App\Domain\Auth\Entity\User;
+use App\Domain\Auth\Enum\LocaleEnum;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -55,11 +56,9 @@ class RegistrationFormType extends AbstractType
                 // this is read and encoded in the controller
                 "mapped" => false,
             ])
-            ->add("locale", ChoiceType::class, [
-                "choices" => [
-                    "auth.language.fr" => "fr",
-                    "auth.language.en" => "en",
-                ],
+            ->add("locale", EnumType::class, [
+                "class" => LocaleEnum::class,
+                "choice_label" => fn (LocaleEnum $choice): string => "auth.language." . $choice->value,
                 "label" => "auth.register.language_label",
                 "placeholder" => false,
             ]);

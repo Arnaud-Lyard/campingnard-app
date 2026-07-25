@@ -3,8 +3,9 @@
 namespace App\Domain\Auth\Form;
 
 use App\Domain\Auth\Entity\User;
+use App\Domain\Auth\Enum\LocaleEnum;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -14,11 +15,9 @@ class SettingsType extends AbstractType
         FormBuilderInterface $builder,
         array $options,
     ): void {
-        $builder->add("locale", ChoiceType::class, [
-            "choices" => [
-                "auth.language.fr" => "fr",
-                "auth.language.en" => "en",
-            ],
+        $builder->add("locale", EnumType::class, [
+            "class" => LocaleEnum::class,
+            "choice_label" => fn (LocaleEnum $choice): string => "auth.language." . $choice->value,
             "label" => "settings.form.language_label",
             "placeholder" => false,
         ]);

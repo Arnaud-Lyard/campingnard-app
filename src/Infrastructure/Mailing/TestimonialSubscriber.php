@@ -11,7 +11,7 @@ use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class TestimonialConfirm implements EventSubscriberInterface
+class TestimonialSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private MailerInterface $mailer,
@@ -35,7 +35,7 @@ class TestimonialConfirm implements EventSubscriberInterface
 
         $confirmUrl = $this->urlGenerator->generate(
             "testimonial_confirm",
-            ["token" => $event->getToken(), "_locale" => $event->getUser()->getLocale()],
+            ["token" => $event->getToken(), "_locale" => $event->getUser()->getLocale()?->value],
             UrlGeneratorInterface::ABSOLUTE_URL,
         );
 

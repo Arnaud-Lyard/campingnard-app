@@ -3,11 +3,13 @@
 namespace App\Http\Public\Controller;
 
 use App\Domain\Auth\Entity\User;
+use App\Domain\Auth\Event\UserCreatedEvent;
 use App\Domain\Auth\Form\ChangePasswordFormType;
 use App\Domain\Auth\Form\ResetPasswordRequestFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,6 +30,7 @@ class ResetPasswordController extends AbstractController
     public function __construct(
         private ResetPasswordHelperInterface $resetPasswordHelper,
         private EntityManagerInterface $entityManager,
+        private readonly EventDispatcherInterface $dispatcher,
     ) {}
 
     /**
@@ -173,30 +176,11 @@ class ResetPasswordController extends AbstractController
         try {
             $resetToken = $this->resetPasswordHelper->generateResetToken($user);
         } catch (ResetPasswordExceptionInterface $e) {
-            // If you want to tell the user why a reset email was not sent, uncomment
-            // the lines below and change the redirect to 'app_forgot_password_request'.
-            // Caution: This may reveal if a user is registered or not.
-            //
-            // $this->addFlash('reset_password_error', sprintf(
-            //     '%s - %s',
-            //     $translator->trans(ResetPasswordExceptionInterface::MESSAGE_PROBLEM_HANDLE, [], 'ResetPasswordBundle'),
-            //     $translator->trans($e->getReason(), [], 'ResetPasswordBundle')
-            // ));
 
             return $this->redirectToRoute("app_check_email");
         }
 
-        $email = new TemplatedEmail()
-            ->from(new Address("send@campingnard.com", "Campingnard"))
-            ->to((string) $user->getEmail())
-            ->subject($translator->trans("email.reset.subject"))
-            ->locale($locale)
-            ->htmlTemplate("reset_password/email.html.twig")
-            ->context([
-                "resetToken" => $resetToken,
-            ]);
-
-        $mailer->send($email);
+        $this->dispatcher->dispatch(new UserCreatedEvent($user, $user->getLocale()->value));
 
         // Store the token object in session for retrieval in check-email route.
         $this->setTokenObjectInSession($resetToken);

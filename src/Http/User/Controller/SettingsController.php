@@ -34,7 +34,9 @@ final class SettingsController extends AbstractController
             $em->flush();
 
             // Translate the confirmation in the freshly chosen language.
-            $localeSwitcher->setLocale($user->getLocale());
+            if ($user->getLocale()) {
+                $localeSwitcher->setLocale($user->getLocale()->value);
+            }
             $this->addFlash("success", $translator->trans("settings.flash.saved"));
 
             return $this->redirectToRoute("user_settings_index");

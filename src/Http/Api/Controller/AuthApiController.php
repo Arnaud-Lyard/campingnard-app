@@ -74,7 +74,7 @@ final class AuthApiController extends AbstractController
         $this->em->persist($user);
         $this->em->flush();
 
-        $this->dispatcher->dispatch(new UserCreatedEvent($user, $locale));
+        $this->dispatcher->dispatch(new UserCreatedEvent($user, $locale->value));
 
         return $this->json(["ok" => true], Response::HTTP_CREATED);
     }
@@ -92,22 +92,7 @@ final class AuthApiController extends AbstractController
 
         // Always return 200 — never reveal whether the account exists.
         if ($user) {
-            try {
-                $resetToken = $resetHelper->generateResetToken($user);
-                $mailer->send(
-                    new TemplatedEmail()
-                        ->from(new Address("send@campingnard.com", "Campingnard"))
-                        ->to((string) $user->getEmail())
-                        ->subject(
-                            $this->translator->trans("email.reset.subject"),
-                        )
-                        ->locale($user->getLocale())
-                        ->htmlTemplate("reset_password/email.html.twig")
-                        ->context(["resetToken" => $resetToken]),
-                );
-            } catch (ResetPasswordExceptionInterface) {
-                // Swallow — e.g. a reset was already requested recently.
-            }
+            $this->dispatcher->dispatch(new UserCreatedEvent($user, $user->getLocale()->value));
         }
 
         return $this->json(["ok" => true]);

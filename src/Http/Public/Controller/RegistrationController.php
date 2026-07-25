@@ -48,7 +48,7 @@ class RegistrationController extends AbstractController
             $entityManager->flush();
 
             $this->dispatcher->dispatch(
-                new UserCreatedEvent($user, $user->getLocale()),
+                new UserCreatedEvent($user, $user->getLocale()->value),
             );
 
             return $this->redirectToRoute("app_login");
