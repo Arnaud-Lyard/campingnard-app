@@ -47,11 +47,7 @@
             "symfony/runtime": true
         },
         "bump-after-update": true,
-        "sort-packages": true,
-        "platform": {
-            "ext-sodium": "8.4",
-            "ext-xml": "8.4"
-        }
+        "sort-packages": true
     },
     "autoload": {
         "psr-4": {

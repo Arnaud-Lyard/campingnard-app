@@ -22,22 +22,13 @@ RUN <<-EOF
 	apt-get install -y --no-install-recommends \
 		file \
 		git \
-		autoconf \
-		make \
-		g++
+		make
 	install-php-extensions \
 		@composer \
+		apcu \
 		intl \
 		opcache \
 		zip
-	curl -fsSL https://github.com/krakjoe/apcu/archive/refs/tags/v5.1.24.tar.gz | tar -xz -C /tmp
-	cd /tmp/apcu-5.1.24
-	phpize
-	./configure
-	make -j"$(nproc)"
-	make install
-	docker-php-ext-enable apcu
-	cd /tmp && rm -rf apcu-5.1.24
 	rm -rf /var/lib/apt/lists/*
 EOF
 
@@ -69,31 +60,10 @@ ENV XDEBUG_MODE=off
 ENV FRANKENPHP_WORKER_CONFIG=watch
 
 # dev dependencies
-# hadolint ignore=DL3008
 RUN <<-EOF
 	mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
-	apt-get update
-	apt-get install -y --no-install-recommends \
-		aggregate \
-		curl \
-		dnsmasq \
-		dnsutils \
-		iproute2 \
-		ipset \
-		iptables \
-		jq \
-		sudo
-	curl -fsSL https://github.com/xdebug/xdebug/archive/refs/tags/3.4.3.tar.gz | tar -xz -C /tmp
-	cd /tmp/xdebug-3.4.3
-	phpize
-	./configure
-	make -j"$(nproc)"
-	make install
-	docker-php-ext-enable xdebug
-	cd /tmp && rm -rf xdebug-3.4.3
-	rm -rf /var/lib/apt/lists/*
+	install-php-extensions xdebug
 	useradd -m -s /bin/bash nonroot
-	echo "nonroot ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/nonroot
 	git config --system --add safe.directory /app
 EOF
 
