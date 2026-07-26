@@ -1,5 +1,5 @@
 # Executables (local)
-DOCKER_COMP = docker compose
+DOCKER_COMP = docker compose --env-file .env.local
 
 # Production image
 REGISTRY  ?= docker.io/arnaudlyard
