@@ -24,8 +24,12 @@
   </div>
 </div>
 
-{# Sélection globale #}
-<div class="mt-4 flex justify-end">
+{# Partage + sélection globale #}
+<div id="share-row" class="mt-4 flex justify-end gap-x-2" {{ checklists is empty ? 'hidden' : '' }}>
+  <button id="share-list" type="button" class="inline-flex items-center gap-x-1.5 rounded-md bg-white px-3 py-1.5 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:shadow-none dark:inset-ring-white/5 dark:hover:bg-white/20">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" class="size-4"><path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" /></svg>
+    {{ 'checklist.share'|trans }}
+  </button>
   <button id="select-all" type="button" class="inline-flex items-center rounded-md bg-white px-3 py-1.5 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:shadow-none dark:inset-ring-white/5 dark:hover:bg-white/20">{{ 'checklist.select_all'|trans }}</button>
 </div>
 
@@ -121,6 +125,8 @@
     toastUpdated: {{ 'checklist.toast.updated'|trans|json_encode|raw }},
     toastGenerated: {{ 'checklist.toast.generated'|trans|json_encode|raw }},
     toastError: {{ 'checklist.toast.error'|trans|json_encode|raw }},
+    toastShareCopied: {{ 'checklist.toast.share_copied'|trans|json_encode|raw }},
+    shareTitle: {{ 'checklist.title'|trans|json_encode|raw }},
   };
 
   const URLS = {
@@ -191,12 +197,14 @@
     list.querySelectorAll('li').forEach(initRow);
 
     const gauge = document.getElementById('progress-gauge');
+    const shareRow = document.getElementById('share-row');
     const checkEmpty = () => {
       const hasItems = list.querySelectorAll('li').length > 0;
       list.hidden = !hasItems;
       emptyState.hidden = hasItems;
       generateBtn.hidden = hasItems;
       gauge.hidden = !hasItems;
+      shareRow.hidden = !hasItems;
       if (!hasItems) bulkBar.hidden = true;
     };
 
@@ -350,6 +358,25 @@
         list.querySelectorAll('li').forEach(initRow);
         reindexOrdre(); refreshBulkBar(); updateProgress(); checkEmpty(); toast(I18N.toastGenerated);
       } catch { toast(I18N.toastError, 'error'); }
+    });
+
+    // Partage du contenu de la liste (partage natif si disponible, sinon presse-papiers)
+    document.getElementById('share-list').addEventListener('click', async () => {
+      const rows = [...list.querySelectorAll('li')];
+      const done = rows.filter((li) => li.dataset.status === 'complete').length;
+      const lines = rows.map((li) => {
+        const checked = li.dataset.status === 'complete' ? '☑' : '☐';
+        return checked + ' ' + li.querySelector('.checklist-name').textContent.trim();
+      });
+      const text = `${I18N.shareTitle} (${done}/${rows.length})\n\n${lines.join('\n')}`;
+
+      if (navigator.share) {
+        try { await navigator.share({ title: I18N.shareTitle, text }); }
+        catch (err) { if (err.name !== 'AbortError') toast(I18N.toastError, 'error'); }
+      } else if (navigator.clipboard) {
+        try { await navigator.clipboard.writeText(text); toast(I18N.toastShareCopied); }
+        catch { toast(I18N.toastError, 'error'); }
+      }
     });
   });
 </script>

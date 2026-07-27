@@ -92,6 +92,7 @@ checklist:
     title: "Checklist"
     create: "Create"
     generate: "Generate a list"
+    share: "Share"
     select_all: "Select all"
     deselect_all: "Deselect all"
     status:
@@ -136,6 +137,7 @@ checklist:
         updated: "Item updated"
         generated: "List generated"
         error: "Something went wrong"
+        share_copied: "List copied to clipboard"
     empty:
         title: "No items"
         text: "Get started by creating your first item."

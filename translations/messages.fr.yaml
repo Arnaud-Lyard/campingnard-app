@@ -92,6 +92,7 @@ checklist:
     title: "Checklist"
     create: "Créer"
     generate: "Générer une liste"
+    share: "Partager"
     select_all: "Tout sélectionner"
     deselect_all: "Tout désélectionner"
     status:
@@ -136,6 +137,7 @@ checklist:
         updated: "Élément mis à jour"
         generated: "Liste générée"
         error: "Une erreur est survenue"
+        share_copied: "Liste copiée dans le presse-papiers"
     empty:
         title: "Aucun élément"
         text: "Commencez par créer votre premier élément."
