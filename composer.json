@@ -23,7 +23,7 @@
         "symfony/flex": "^2.11",
         "symfony/form": "7.4.*",
         "symfony/framework-bundle": "7.4.*",
-        "symfony/http-client": "7.4.*",
+        "symfony/http-client": "8.1.*",
         "symfony/mailer": "7.4.*",
         "symfony/monolog-bundle": "^4.0.2",
         "symfony/property-access": "7.4.*",
