@@ -24,7 +24,7 @@
         "symfony/form": "7.4.*",
         "symfony/framework-bundle": "7.4.*",
         "symfony/http-client": "7.4.*",
-        "symfony/mailer": "7.4.*",
+        "symfony/mailer": "8.1.*",
         "symfony/monolog-bundle": "^4.0.2",
         "symfony/property-access": "7.4.*",
         "symfony/property-info": "7.4.*",
